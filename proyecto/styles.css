@@ -88,6 +88,22 @@ h1 + p {
     font-weight: 700;
     color: var(--text-primary);
   }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0 0.5rem;
+
+    p {
+      font-size: large;
+      font-weight: bold;
+    }
+
+    svg {
+      height: 2.5rem;
+      color: var(--primary-light);
+    }
+  }
 }
 
 /* Navegación del header a otras páginas */
@@ -297,26 +313,11 @@ section {
   padding: 2rem;
   border-bottom: 1px solid var(--primary);
 
-  .content {
+  header {
     display: grid;
-    grid-template-columns: 90% auto;
-    gap: 1rem;
+    grid-template-columns: auto 10%;
     align-items: start;
 
-    button {
-      background-color: var(--primary-light);
-      color: var(--text-primary);
-      padding: 0.7rem;
-
-      font-size: 0.9em;
-      font-weight: bold;
-
-      border: unset;
-      border-radius: 0.5rem;
-    }
-  }
-
-  header {
     margin-bottom: 1rem;
 
     p {
@@ -324,28 +325,58 @@ section {
       color: var(--text-muted);
     }
   }
+
+  button {
+    background-color: var(--primary);
+    color: var(--text-primary);
+    padding: 0.7rem;
+
+    font-size: 0.9em;
+    font-weight: bold;
+
+    border: unset;
+    border-radius: 0.5rem;
+
+    cursor: pointer;
+    transition: all 0.2s linear;
+
+    &:hover, &.active {
+      background-color: var(--primary-light);
+    }
+    &:active {
+      background-color: oklch(from var(--primary-light) l c h / 50%);
+    }
+  }
+
+  button.applied {
+    background-color: green;
+    cursor: not-allowed;
+  }
 }
 
 .pagination {
+  display: flex;
   margin: 3rem 0;
   justify-content: center;
+  gap: 2.5rem;
 
-  button {
+  a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     color: var(--text-muted);
 
     font-size: 1em;
     font-weight: bold;
 
-    border: unset;
-    background-color: unset;
-  }
+    width: 2.5rem;
+    height: 2.5rem;
 
-  .numbers button {
     border-radius: 0.5rem;
-    padding: 1rem;
   }
 
-  button.active {
+  a.active {
     color: var(--text-primary);
     background-color: var(--primary-light);
   }
