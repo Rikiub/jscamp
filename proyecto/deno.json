@@ -1,6 +1,6 @@
 {
   "imports": {
-    "vite": "npm:vite@^7.1.9"
+    "vite": "npm:vite@^7.1.11"
   },
   "tasks": {
     "dev": "vite dev"
