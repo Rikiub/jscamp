@@ -1,0 +1,55 @@
+.root {
+	display: grid;
+	grid-template-columns: repeat(3, auto);
+	justify-content: space-between;
+	align-items: center;
+	gap: 2rem;
+
+	background-color: var(--background);
+	padding: 1rem;
+	border-bottom: 1px solid var(--border);
+
+	div {
+		display: flex;
+		align-items: center;
+		gap: 0 0.5rem;
+
+		a {
+			padding: 0.5rem 1rem;
+			border-radius: 0.5rem;
+			background-color: #334155;
+			color: var(--text-primary);
+			display: inline-block;
+			font-size: 0.875rem;
+			font-weight: 700;
+			text-decoration: none;
+		}
+	}
+
+	nav {
+		display: flex;
+		gap: 1rem;
+
+		a {
+			font-weight: 500;
+			color: var(--text-secondary);
+			text-decoration: none;
+			transition: color 0.2s;
+
+			&:hover,
+			&:focus {
+				color: var(--primary);
+			}
+		}
+	}
+
+	p {
+		font-size: large;
+		font-weight: bold;
+	}
+
+	svg {
+		height: 2.5rem;
+		color: var(--primary-light);
+	}
+}
