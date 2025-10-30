@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import styles from "./index.module.css";
+import styles from "./styles.module.css";
 
 export function AboutCard({
 	Icon,

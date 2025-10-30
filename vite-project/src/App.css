@@ -1,21 +1,50 @@
 :root {
-    --primary: #3b4550;
-    --primary-dark: #0a3d66;
-    --primary-hover: #0d5ba8;
-    --primary-light: #09f;
-    --background: #06182a;
-    --text-primary: #ffffff;
-    --text-secondary: #cbd5e1;
-    --text-muted: #94a3b8;
-    --border: rgba(255, 255, 255, 0.1);
-    --card-bg: #1e293b;
-    --shadow: rgba(0, 0, 0, 0.3);
-    --input-bg: #1e293b;
-    --hsla-example: hsla(210, 100%, 56%, 1);
+	--primary: #09f;
+
+	--background: #06182a;
+	--surface: #1e293b;
+
+	--text-primary: #ffffff;
+	--text-secondary: #cbd5e1;
+	--text-muted: #94a3b8;
+
+	--border: rgba(255, 255, 255, 0.1);
+	--shadow: rgba(0, 0, 0, 0.3);
+}
+
+/* Normalizer */
+* {
+	margin: 0;
+	padding: 0;
+	border: 0 solid;
+	box-sizing: border-box;
 }
 
 body {
-    font-family: system-ui;
-    background-color: var(--background);
-    color: var(--text-primary);
+	font-family: system-ui;
+	line-height: 1.6;
+	min-height: 100vh;
+}
+
+img {
+	display: block;
+	max-width: 100%;
+}
+
+/* Defaults */
+body {
+	background-color: var(--background);
+	color: var(--text-primary);
+}
+
+a {
+	text-decoration: none;
+	color: unset;
+
+	&:hover {
+		color: var(--primary);
+	}
+	&:active {
+		color: oklch(from var(--primary) calc(l - 0.1) c h);
+	}
 }

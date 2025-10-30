@@ -1,0 +1,58 @@
+.root {
+	display: grid;
+	grid-template-columns: repeat(3, auto);
+	justify-content: space-between;
+	align-items: center;
+	gap: 2rem;
+
+	background-color: var(--background);
+
+	padding: 1.3rem;
+	border-bottom: 1px solid var(--border);
+
+	> div {
+		display: flex;
+		align-items: center;
+		gap: 0 0.5rem;
+	}
+}
+
+.left_logo {
+	svg {
+		color: var(--primary);
+	}
+
+	p {
+		font-size: large;
+		font-weight: bold;
+		margin: 0;
+	}
+}
+
+.center_nav {
+	a {
+		font-size: 0.95rem;
+		font-weight: 700;
+
+		color: var(--text-secondary);
+
+		padding: 0 1rem;
+		border-radius: 0.5rem;
+
+		transition: color linear 0.1s;
+
+		&:hover {
+			color: var(--primary);
+		}
+		&:active {
+			color: oklch(from var(--primary) calc(l - 0.1) c h);
+		}
+	}
+}
+
+.right_action {
+	background-color: var(--surface);
+	padding: 0.5rem 1rem;
+	border-radius: 8px;
+	font-weight: 500;
+}

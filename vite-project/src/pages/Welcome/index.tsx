@@ -1,17 +1,23 @@
 import { Briefcase, Search } from "lucide-react";
+import { useEffect } from "react";
 import Background from "@/assets/background.webp";
-import { AboutCard } from "@/components/AboutCard";
-import { Header } from "@/components/Header";
-import styles from "./index.module.css";
+import { Footer } from "@/components/layout/Footer";
+import { Header } from "@/components/layout/Header";
+import { AboutCard } from "@/pages/Welcome/AboutCard";
+import styles from "./styles.module.css";
 
 export function WelcomePage() {
+	useEffect(() => {
+		document.title = "DevJobs";
+	});
+
 	return (
 		<>
 			<Header />
 
 			<main>
-				<section>
-					<img src={Background} alt="Background" width="200" />
+				<section className={styles.hero}>
+					<img className={styles.hero} src={Background} alt="Banner" />
 
 					<h1>Encuentra el trabajo de tus sueños</h1>
 
@@ -21,21 +27,25 @@ export function WelcomePage() {
 					</p>
 
 					<search>
-						<Search />
+						<form>
+							<div>
+								<Search />
 
-						<input
-							required
-							type="text"
-							placeholder="Buscar empleos por título, habilidad o empresa"
-						/>
+								<input
+									required
+									type="text"
+									placeholder="Buscar empleos por título, habilidad o empresa"
+								/>
+							</div>
 
-						<button disabled type="submit">
-							Buscar
-						</button>
+							<button disabled type="submit">
+								Buscar
+							</button>
+						</form>
 					</search>
 				</section>
 
-				<section>
+				<section className={styles.about}>
 					<header>
 						<h2>¿Por qué DevJobs?</h2>
 						<p>
@@ -66,6 +76,8 @@ export function WelcomePage() {
 					</footer>
 				</section>
 			</main>
+
+			<Footer />
 		</>
 	);
 }

@@ -1,0 +1,8 @@
+.root {
+	font-size: 1.2rem;
+	text-align: center;
+	padding: 2rem;
+
+	color: var(--text-muted);
+	border-top: 1px solid var(--border);
+}
