@@ -1,8 +1,18 @@
+import { Footer } from "@/components/layout/Footer";
+import { Header } from "@/components/layout/Header";
 import { WelcomePage } from "@/pages/Welcome";
-import "./App.css";
+
+import "@/styles/base.css";
+import "@/styles/theme.css";
 
 function App() {
-	return <WelcomePage />;
+	return (
+		<>
+			<Header />
+			<WelcomePage />
+			<Footer />
+		</>
+	);
 }
 
 export default App;
