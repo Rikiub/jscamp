@@ -23,8 +23,8 @@ function Logo() {
 function Nav() {
 	return (
 		<nav className={styles.nav}>
-			<a href="#top">Inicio</a>
-			<a href="#top">Empleos</a>
+			<a href="/">Inicio</a>
+			<a href="/empleos">Empleos</a>
 			<a href="#top">Empresas</a>
 			<a href="#top">Salarios</a>
 		</nav>

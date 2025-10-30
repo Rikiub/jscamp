@@ -5,7 +5,7 @@ import Background from "@/assets/background.webp";
 import { AboutCard } from "@/components/shared/AboutCard";
 import styles from "./styles.module.css";
 
-export function WelcomePage() {
+export function LandingPage() {
 	useEffect(() => {
 		document.title = "DevJobs";
 	});
