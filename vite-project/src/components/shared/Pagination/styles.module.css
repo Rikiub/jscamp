@@ -1,0 +1,25 @@
+.root {
+	display: flex;
+	gap: 2.5rem;
+
+	button {
+		background-color: unset;
+		color: var(--text-muted);
+		cursor: pointer;
+	}
+}
+
+.pages button {
+	font-size: 1em;
+	font-weight: bold;
+
+	width: 2.5rem;
+	height: 2.5rem;
+
+	border-radius: 0.5rem;
+}
+
+.active {
+	background-color: var(--primary);
+	color: var(--text-primary);
+}
