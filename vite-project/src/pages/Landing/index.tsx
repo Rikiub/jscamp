@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Background from "@/assets/background.webp";
 import { AboutCard } from "@/components/shared/AboutCard";
 import styles from "./styles.module.css";
+import { SearchBar } from "@/components/shared/SearchBar";
 
 export function LandingPage() {
 	useEffect(() => {
@@ -22,23 +23,7 @@ export function LandingPage() {
 					próxima oportunidad.
 				</p>
 
-				<search>
-					<form>
-						<div>
-							<Search />
-
-							<input
-								required
-								type="text"
-								placeholder="Buscar empleos por título, habilidad o empresa"
-							/>
-						</div>
-
-						<button disabled type="submit">
-							Buscar
-						</button>
-					</form>
-				</search>
+				<SearchBar placeholder="Buscar trabajos, empresas o habilidades" />
 			</section>
 
 			<section className={styles.about}>

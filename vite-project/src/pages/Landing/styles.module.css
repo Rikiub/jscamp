@@ -37,49 +37,9 @@
 	}
 
 	search {
+		margin-top: 20px;
 		width: 100%;
 		max-width: 700px;
-	}
-
-	search form {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 20px;
-
-		div {
-			display: flex;
-			gap: 10px;
-			width: 100%;
-		}
-
-		background-color: var(--surface);
-		padding: 0.5rem;
-		margin: 20px 0;
-		border-radius: 5px;
-
-		svg,
-		input::placeholder {
-			color: var(--text-muted);
-			font-size: 0.9rem;
-		}
-		input {
-			background-color: unset;
-			width: 100%;
-		}
-
-		button {
-			background-color: var(--primary);
-			color: var(--text-primary);
-
-			font-weight: bold;
-			font-size: 0.9rem;
-
-			padding: 13px 20px;
-			border-radius: 5px;
-
-			cursor: pointer;
-		}
 	}
 }
 

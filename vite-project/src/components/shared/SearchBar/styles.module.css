@@ -1,0 +1,48 @@
+.root {
+	--padding: 0.5rem;
+
+	background-color: var(--surface);
+	color: var(--text-muted);
+	border: 2px solid var(--border);
+	transition: outline linear 0.1s;
+
+	&:focus-within {
+		outline: 2px solid var(--primary);
+	}
+
+	width: 100%;
+	border-radius: 0.5rem;
+	padding: var(--padding);
+
+	display: flex;
+	align-items: center;
+	gap: 10px;
+
+	input {
+		background-color: unset;
+		color: var(--text-primary);
+		width: 100%;
+		padding: var(--padding);
+
+		&::placeholder {
+			color: var(--text-muted);
+		}
+
+		&:focus {
+			outline: unset;
+		}
+	}
+}
+
+.root button {
+	background-color: var(--primary);
+	color: var(--text-primary);
+
+	font-weight: bold;
+	font-size: 0.9rem;
+
+	padding: 13px 20px;
+	border-radius: 5px;
+
+	cursor: pointer;
+}

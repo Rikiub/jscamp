@@ -1,0 +1,20 @@
+.root {
+	background-color: var(--surface);
+	color: var(--text-primary);
+	padding: 0.6rem;
+	border-radius: 0.5rem;
+
+	cursor: pointer;
+	transition: all linear 0.1s;
+
+	&:hover {
+		background-color: oklch(from var(--primary) l c h / 0.9);
+	}
+	&:active {
+		background-color: oklch(from var(--primary) l c h / 0.6);
+	}
+	&:focus {
+		outline: 2px solid oklch(from var(--primary) l c h / 0.5);
+		outline-offset: 2px;
+	}
+}

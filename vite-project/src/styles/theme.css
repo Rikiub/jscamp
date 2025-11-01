@@ -1,13 +1,13 @@
 :root {
-	--primary: #09f;
+	--primary: oklch(0.669 0.18 248);
 
-	--background: #06182a;
-	--surface: #1e293b;
+	--background: oklch(0.204 0.04 250);
+	--surface: oklch(0.279 0.0368 260.03);
 
-	--text-primary: #ffffff;
-	--text-secondary: #cbd5e1;
-	--text-muted: #94a3b8;
+	--text-primary: oklch(1 0 129);
+	--text-secondary: oklch(0.869 0.01 252);
+	--text-muted: oklch(0.7 0.03 256);
 
-	--border: rgba(255, 255, 255, 0.1);
-	--shadow: rgba(0, 0, 0, 0.3);
+	--border: oklch(1 0 0 / 10%);
+	--shadow: oklch(0 0 0 / 30%);
 }
