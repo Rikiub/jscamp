@@ -1,44 +1,30 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router";
 import { JobList } from "@/components/shared/JobList";
 import { Pagination } from "@/components/shared/Pagination";
 import { SearchBar } from "@/components/shared/SearchBar";
 import { FormLabel } from "@/components/ui/FormLabel";
 import { Select } from "@/components/ui/Select";
-import { getJobs } from "@/utils/jobsData";
+import { getJobs, getLocations, getTags } from "@/lib/jobsData";
+import { fuzzyFilter } from "@/lib/sanitize";
 import styles from "./styles.module.css";
 
-function fuzzyFilter(source: string[], target: string) {
-	for (const s of source) {
-		if (sanitizeString(s).includes(sanitizeString(target))) return true;
-	}
-	return false;
-}
-
-function sanitizeString(str: string) {
-	return str.toLowerCase().normalize("NFD").replace("/[\u0300-\u036f]/g", "");
-}
-
-function splitArray<T>(array: T[], size: number): T[][] {
-	const result: T[][] = [];
-
-	for (let i = 0; i < array.length; i += size) {
-		result.push(array.slice(i, i + size));
-	}
-
-	return result;
-}
-
 export function EmpleosPage() {
+	const RESULTS_PER_PAGE = 10;
+
 	const [search, setSearch] = useState("");
 	const [technology, setTechnology] = useState("");
 	const [location, setLocation] = useState("");
 
-	const [page, setPage] = useState(1);
+	const [searchParams, setSearchParams] = useSearchParams();
+	const [page, setPage] = useState(Number(searchParams.get("page") ?? 1));
+	useEffect(() => {
+		setSearchParams({ page: page.toString() });
+	}, [page, setSearchParams]);
 
 	const jobs = getJobs();
-	const jobsPages = useMemo(() => splitArray(jobs, 2), [jobs]);
 	const jobsFiltered = useMemo(() => {
-		let data = jobsPages[page - 1];
+		let data = jobs;
 
 		if (search) {
 			data = data.filter((j) => fuzzyFilter([j.title, j.description], search));
@@ -50,31 +36,15 @@ export function EmpleosPage() {
 			data = data.filter((j) => fuzzyFilter([j.location], location));
 		}
 
-		return data;
-	}, [technology, location, search, jobsPages[page], page]);
-
-	const tags = useMemo(() => {
-		const data: string[] = [];
-
-		for (const j of jobs) {
-			for (const t of j.tags) {
-				if (data.includes(t)) break;
-				data.push(t);
-			}
-		}
+		data = data.slice((page - 1) * RESULTS_PER_PAGE, page * RESULTS_PER_PAGE);
 
 		return data;
-	}, [jobs]);
-	const locations = useMemo(() => {
-		const data: string[] = [];
+	}, [technology, location, search, page, jobs]);
+	const totalPages = Math.ceil(jobs.length / RESULTS_PER_PAGE);
 
-		for (const j of jobs) {
-			if (data.includes(j.location)) break;
-			data.push(j.location);
-		}
-
-		return data;
-	}, [jobs]);
+	const locations = useMemo(() => getLocations(jobs), [jobs]);
+	const tags = useMemo(() => getTags(jobs), [jobs]);
+	console.log(tags);
 
 	return (
 		<div className={styles.root}>
@@ -132,7 +102,7 @@ export function EmpleosPage() {
 
 					<Pagination
 						current={page}
-						total={jobsPages.length}
+						total={totalPages}
 						onChange={(number) => setPage(number)}
 					/>
 				</main>

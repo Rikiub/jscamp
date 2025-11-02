@@ -1,5 +1,5 @@
 import { JobCard } from "@/components/shared/JobList/JobCard";
-import type { Jobs } from "@/utils/jobsData";
+import type { Jobs } from "@/lib/jobsData";
 import styles from "./styles.module.css";
 
 export function JobList({ jobs }: { jobs: Jobs }) {
