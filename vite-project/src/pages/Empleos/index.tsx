@@ -1,20 +1,80 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { JobList } from "@/components/shared/JobList";
 import { Pagination } from "@/components/shared/Pagination";
 import { SearchBar } from "@/components/shared/SearchBar";
+import { FormLabel } from "@/components/ui/FormLabel";
 import { Select } from "@/components/ui/Select";
 import { getJobs } from "@/utils/jobsData";
 import styles from "./styles.module.css";
-import { FormLabel } from "@/components/ui/FormLabel";
+
+function fuzzyFilter(source: string[], target: string) {
+	for (const s of source) {
+		if (sanitizeString(s).includes(sanitizeString(target))) return true;
+	}
+	return false;
+}
+
+function sanitizeString(str: string) {
+	return str.toLowerCase().normalize("NFD").replace("/[\u0300-\u036f]/g", "");
+}
+
+function splitArray<T>(array: T[], size: number): T[][] {
+	const result: T[][] = [];
+
+	for (let i = 0; i < array.length; i += size) {
+		result.push(array.slice(i, i + size));
+	}
+
+	return result;
+}
 
 export function EmpleosPage() {
-	const [page, setPage] = useState(1);
-	const jobs = useMemo(() => getJobs(), []);
+	const [search, setSearch] = useState("");
+	const [technology, setTechnology] = useState("");
+	const [location, setLocation] = useState("");
 
-	useEffect(() => {
-		document.title = "DevJobs - Empleos";
-		console.log("Current page:", page);
-	}, [page]);
+	const [page, setPage] = useState(1);
+
+	const jobs = getJobs();
+	const jobsPages = useMemo(() => splitArray(jobs, 2), [jobs]);
+	const jobsFiltered = useMemo(() => {
+		let data = jobsPages[page - 1];
+
+		if (search) {
+			data = data.filter((j) => fuzzyFilter([j.title, j.description], search));
+		}
+		if (technology) {
+			data = data.filter((j) => fuzzyFilter(j.tags, technology));
+		}
+		if (location) {
+			data = data.filter((j) => fuzzyFilter([j.location], location));
+		}
+
+		return data;
+	}, [technology, location, search, jobsPages[page], page]);
+
+	const tags = useMemo(() => {
+		const data: string[] = [];
+
+		for (const j of jobs) {
+			for (const t of j.tags) {
+				if (data.includes(t)) break;
+				data.push(t);
+			}
+		}
+
+		return data;
+	}, [jobs]);
+	const locations = useMemo(() => {
+		const data: string[] = [];
+
+		for (const j of jobs) {
+			if (data.includes(j.location)) break;
+			data.push(j.location);
+		}
+
+		return data;
+	}, [jobs]);
 
 	return (
 		<div className={styles.root}>
@@ -28,29 +88,36 @@ export function EmpleosPage() {
 					<SearchBar
 						name="search"
 						placeholder="Buscar trabajos, empresas o habilidades"
+						value={search}
+						onChange={(event) => setSearch(event.target.value)}
 					/>
 
 					<div className={styles.filters}>
 						<FormLabel>
 							Tecnologia
-							<Select name="technology" placeholder="Seleciona...">
-								<option value="mobile">Mobile</option>
-								<option value="javascript">JavaScript</option>
-								<option value="python">Python</option>
-								<option value="java">Java</option>
-								<option value="react">React</option>
-								<option value="nodejs">Node.js</option>
+							<Select
+								name="technology"
+								placeholder="Seleciona..."
+								value={technology}
+								onChange={(event) => setTechnology(event.target.value)}
+							>
+								{tags.map((value) => (
+									<option key={value}>{value}</option>
+								))}
 							</Select>
 						</FormLabel>
 
 						<FormLabel>
 							Ubicación
-							<Select name="location" placeholder="Seleciona...">
-								<option value="remoto">Remoto</option>
-								<option value="cdmx">Ciudad de México</option>
-								<option value="guadalajara">Guadalajara</option>
-								<option value="monterrey">Monterrey</option>
-								<option value="barcelona">Barcelona</option>
+							<Select
+								name="location"
+								placeholder="Seleciona..."
+								value={location}
+								onChange={(event) => setLocation(event.target.value)}
+							>
+								{locations.map((value) => (
+									<option key={value}>{value}</option>
+								))}
 							</Select>
 						</FormLabel>
 					</div>
@@ -61,11 +128,11 @@ export function EmpleosPage() {
 				<main>
 					<h2>Resultados de busqueda</h2>
 
-					<JobList jobs={jobs} />
+					<JobList jobs={jobsFiltered} />
 
 					<Pagination
 						current={page}
-						total={5}
+						total={jobsPages.length}
 						onChange={(number) => setPage(number)}
 					/>
 				</main>

@@ -1,19 +1,16 @@
 import { Search } from "lucide-react";
+import type { InputHTMLAttributes } from "react";
 import styles from "./styles.module.css";
 
-export function SearchBar({
-	className,
-	placeholder,
-	name,
-}: {
+type Props = {
 	className?: string;
-	placeholder?: string;
-	name?: string;
-}) {
+} & InputHTMLAttributes<HTMLInputElement>;
+
+export function SearchBar({ className, ...rest }: Props) {
 	return (
 		<search className={`${styles.root} ${className}`}>
 			<Search />
-			<input type="text" name={name} placeholder={placeholder} />
+			<input type="text" {...rest} />
 		</search>
 	);
 }
