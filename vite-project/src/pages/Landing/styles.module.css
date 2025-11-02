@@ -41,6 +41,11 @@
 		width: 100%;
 		max-width: 700px;
 	}
+
+	section {
+		margin: 0 2rem;
+		margin-bottom: 5rem;
+	}
 }
 
 .about {
@@ -75,9 +80,4 @@
 	gap: 2rem;
 	padding: 2rem 0;
 	text-align: center;
-}
-
-section {
-	margin: 0 2rem;
-	margin-bottom: 5rem;
 }

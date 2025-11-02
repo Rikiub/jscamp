@@ -1,17 +1,11 @@
 .root {
-	gap: 2rem;
-	padding: 2rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 
-	&,
-	header {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
-
-	header {
-		margin: 10px;
-		gap: 1rem;
+	section > header {
+		text-align: center;
+		margin: 20px;
 
 		h1 {
 			font-size: 3rem;
@@ -22,13 +16,14 @@
 	> section {
 		width: 100%;
 		max-width: 980px;
+		margin-bottom: 3rem;
 	}
 }
 
 .filters {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 10px;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+	gap: 20px;
 
 	margin-top: 15px;
 }

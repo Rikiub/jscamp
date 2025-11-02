@@ -1,0 +1,31 @@
+.root {
+	display: grid;
+	grid-template-rows: repeat(3, auto);
+	gap: 1rem;
+
+	padding: 2rem;
+	border-bottom: 1px solid var(--border);
+
+	header {
+		display: grid;
+		grid-template-columns: 85% auto;
+		align-items: start;
+
+		p {
+			color: var(--text-muted);
+		}
+	}
+}
+
+.tags {
+	display: flex;
+	gap: 0.5rem;
+
+	span {
+		background-color: var(--surface);
+		color: var(--text-secondary);
+
+		border-radius: 5px;
+		padding: 0.3rem 1rem;
+	}
+}

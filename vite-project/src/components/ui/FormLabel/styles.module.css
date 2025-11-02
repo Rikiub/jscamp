@@ -1,0 +1,11 @@
+.root {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+
+	font-weight: bold;
+
+	> * {
+		margin-inline-start: 3px;
+	}
+}

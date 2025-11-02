@@ -1,4 +1,4 @@
-import { JobCard } from "@/components/shared/JobCard";
+import { JobCard } from "@/components/shared/JobList/JobCard";
 import type { Jobs } from "@/utils/jobsData";
 import styles from "./styles.module.css";
 

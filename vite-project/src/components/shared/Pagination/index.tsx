@@ -1,22 +1,23 @@
-import { ChevronFirst, ChevronLast } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import styles from "./styles.module.css";
 
-type PaginationProps = {
+type Props = {
 	current: number;
 	total: number;
-	onChange: (page: number) => void;
+	onChange?: (page: number) => void;
+	className?: string;
 };
 
-export function Pagination({ current, total, onChange }: PaginationProps) {
+export function Pagination({ current, total, onChange, className }: Props) {
 	if (!total || total <= 1) return null;
 
 	function goto(page: number) {
 		const p = Math.max(1, Math.min(total, page));
-		if (p !== current) onChange(p);
+		if (p !== current) onChange?.(p);
 	}
 
 	return (
-		<nav className={styles.root} aria-label="Pagination">
+		<nav className={`${styles.root} ${className}`} aria-label="Pagination">
 			<button
 				type="button"
 				className={styles.control}
@@ -24,7 +25,7 @@ export function Pagination({ current, total, onChange }: PaginationProps) {
 				disabled={current === 1}
 				aria-label="Previous page"
 			>
-				<ChevronFirst />
+				<ChevronLeft size={20} />
 			</button>
 
 			<div className={styles.pages}>
@@ -52,7 +53,7 @@ export function Pagination({ current, total, onChange }: PaginationProps) {
 				disabled={current === total}
 				aria-label="Next page"
 			>
-				<ChevronLast />
+				<ChevronRight size={20} />
 			</button>
 		</nav>
 	);
