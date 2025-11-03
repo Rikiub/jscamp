@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
-import type { Job } from "@/lib/jobsData";
+import type { Job } from "@/pages/empleos/utils/jobs";
 import styles from "./styles.module.css";
 
 export function JobCard({

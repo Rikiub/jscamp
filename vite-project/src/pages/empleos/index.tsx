@@ -1,26 +1,34 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
-import { JobList } from "@/components/shared/JobList";
-import { Pagination } from "@/components/shared/Pagination";
-import { SearchBar } from "@/components/shared/SearchBar";
 import { FormLabel } from "@/components/ui/FormLabel";
+import { Pagination } from "@/components/ui/Pagination";
+import { SearchBar } from "@/components/ui/SearchBar";
 import { Select } from "@/components/ui/Select";
-import { getJobs, getLocations, getTags } from "@/lib/jobsData";
-import { fuzzyFilter } from "@/lib/sanitize";
+import { JobList } from "./components/JobList";
 import styles from "./styles.module.css";
+import { getJobs, getLocations, getTags } from "./utils/jobs";
+import { fuzzyFilter } from "./utils/sanitize";
 
-export function EmpleosPage() {
+export function Empleos() {
 	const RESULTS_PER_PAGE = 10;
 
-	const [search, setSearch] = useState("");
-	const [technology, setTechnology] = useState("");
-	const [location, setLocation] = useState("");
-
 	const [searchParams, setSearchParams] = useSearchParams();
+
+	const [search, setSearch] = useState(searchParams.get("search") ?? "");
+	const [technology, setTechnology] = useState(
+		searchParams.get("technology") ?? "",
+	);
+	const [location, setLocation] = useState(searchParams.get("location") ?? "");
 	const [page, setPage] = useState(Number(searchParams.get("page") ?? 1));
+
 	useEffect(() => {
-		setSearchParams({ page: page.toString() });
-	}, [page, setSearchParams]);
+		setSearchParams({
+			page: page.toString(),
+			search: search,
+			technology: technology,
+			location: location,
+		});
+	}, [page, setSearchParams, location, search, technology]);
 
 	const jobs = getJobs();
 	const jobsFiltered = useMemo(() => {
@@ -57,8 +65,9 @@ export function EmpleosPage() {
 					<SearchBar
 						name="search"
 						placeholder="Buscar trabajos, empresas o habilidades"
-						value={search}
-						onChange={(event) => setSearch(event.target.value)}
+						defaultValue={search}
+						onSearch={(value) => setSearch(value)}
+						debounce={300}
 					/>
 
 					<div className={styles.filters}>

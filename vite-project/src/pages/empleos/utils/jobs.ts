@@ -1,4 +1,4 @@
-import data from "@/assets/data.json";
+import data from "./jobs.json";
 
 export interface Job {
     id: number;

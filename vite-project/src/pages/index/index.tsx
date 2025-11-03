@@ -1,11 +1,10 @@
 import { Briefcase } from "lucide-react";
-
-import Background from "@/assets/background.webp";
-import { AboutCard } from "@/components/shared/AboutCard";
-import { SearchBar } from "@/components/shared/SearchBar";
+import { SearchBar } from "@/components/ui/SearchBar";
+import Background from "./assets/background.webp";
+import { AboutCard } from "./components/AboutCard";
 import styles from "./styles.module.css";
 
-export function LandingPage() {
+export function Index() {
 	return (
 		<main className={styles.root}>
 			<section className={styles.hero}>
