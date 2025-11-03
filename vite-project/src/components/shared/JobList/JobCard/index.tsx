@@ -25,6 +25,7 @@ export function JobCard({
 					<p>
 						{job.company} | {job.location}
 					</p>
+					<p>{job.salary}</p>
 				</div>
 
 				<Button

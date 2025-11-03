@@ -44,7 +44,6 @@ export function EmpleosPage() {
 
 	const locations = useMemo(() => getLocations(jobs), [jobs]);
 	const tags = useMemo(() => getTags(jobs), [jobs]);
-	console.log(tags);
 
 	return (
 		<div className={styles.root}>

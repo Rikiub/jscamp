@@ -12,8 +12,8 @@ export function Select({ className, children, placeholder, ...rest }: Props) {
 
 	return (
 		<select
-			value={selectValue}
 			className={`${styles.root} ${className} ${placeholder && !selectValue ? styles.placeholder : ""}`}
+			value={selectValue}
 			onChange={(v) => setSelectValue(v.target.value)}
 			{...rest}
 		>

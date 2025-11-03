@@ -1,18 +1,13 @@
-import { Briefcase, Search } from "lucide-react";
-import { useEffect } from "react";
+import { Briefcase } from "lucide-react";
 
 import Background from "@/assets/background.webp";
 import { AboutCard } from "@/components/shared/AboutCard";
-import styles from "./styles.module.css";
 import { SearchBar } from "@/components/shared/SearchBar";
+import styles from "./styles.module.css";
 
 export function LandingPage() {
-	useEffect(() => {
-		document.title = "DevJobs";
-	});
-
 	return (
-		<main>
+		<main className={styles.root}>
 			<section className={styles.hero}>
 				<img className={styles.hero} src={Background} alt="Banner" />
 
