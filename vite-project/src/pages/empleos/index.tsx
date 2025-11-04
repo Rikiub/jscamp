@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
 import { FormLabel } from "@/components/ui/FormLabel";
 import { Pagination } from "@/components/ui/Pagination";
@@ -11,9 +11,9 @@ import { fuzzyFilter } from "./utils/sanitize";
 
 export function Empleos() {
 	const RESULTS_PER_PAGE = 10;
-
 	const [searchParams, setSearchParams] = useSearchParams();
 
+	// Filter Params
 	const [search, setSearch] = useState(searchParams.get("search") ?? "");
 	const [technology, setTechnology] = useState(
 		searchParams.get("technology") ?? "",
@@ -21,6 +21,7 @@ export function Empleos() {
 	const [location, setLocation] = useState(searchParams.get("location") ?? "");
 	const [page, setPage] = useState(Number(searchParams.get("page") ?? 1));
 
+	// Sync URL
 	useEffect(() => {
 		setSearchParams({
 			page: page.toString(),
@@ -28,30 +29,41 @@ export function Empleos() {
 			technology: technology,
 			location: location,
 		});
-	}, [page, setSearchParams, location, search, technology]);
+	}, [setSearchParams, page, search, technology, location]);
 
+	// Filtered
 	const jobs = getJobs();
 	const jobsFiltered = useMemo(() => {
 		let data = jobs;
 
-		if (search) {
-			data = data.filter((j) => fuzzyFilter([j.title, j.description], search));
-		}
 		if (technology) {
 			data = data.filter((j) => fuzzyFilter(j.tags, technology));
 		}
 		if (location) {
 			data = data.filter((j) => fuzzyFilter([j.location], location));
 		}
+		if (search) {
+			data = data.filter((j) =>
+				fuzzyFilter(
+					[j.title, j.company, j.description, j.location, j.salary, ...j.tags],
+					search,
+				),
+			);
+		}
 
 		data = data.slice((page - 1) * RESULTS_PER_PAGE, page * RESULTS_PER_PAGE);
-
 		return data;
 	}, [technology, location, search, page, jobs]);
 	const totalPages = Math.ceil(jobs.length / RESULTS_PER_PAGE);
 
+	// Selects
 	const locations = useMemo(() => getLocations(jobs), [jobs]);
 	const tags = useMemo(() => getTags(jobs), [jobs]);
+
+	// Form
+	const searchId = useId();
+	const technologyId = useId();
+	const locationId = useId();
 
 	return (
 		<div className={styles.root}>
@@ -63,7 +75,7 @@ export function Empleos() {
 
 				<form onSubmit={(e) => e.preventDefault()}>
 					<SearchBar
-						name="search"
+						name={searchId}
 						placeholder="Buscar trabajos, empresas o habilidades"
 						defaultValue={search}
 						onSearch={(value) => setSearch(value)}
@@ -74,9 +86,9 @@ export function Empleos() {
 						<FormLabel>
 							Tecnologia
 							<Select
-								name="technology"
-								placeholder="Seleciona..."
+								name={technologyId}
 								value={technology}
+								placeholder="Seleciona..."
 								onChange={(event) => setTechnology(event.target.value)}
 							>
 								{tags.map((value) => (
@@ -88,8 +100,8 @@ export function Empleos() {
 						<FormLabel>
 							Ubicación
 							<Select
-								name="location"
 								placeholder="Seleciona..."
+								name={locationId}
 								value={location}
 								onChange={(event) => setLocation(event.target.value)}
 							>
