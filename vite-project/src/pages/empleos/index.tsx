@@ -67,6 +67,8 @@ export function Empleos() {
 
 	return (
 		<div className={styles.root}>
+			<title>Empleos</title>
+
 			<section>
 				<header>
 					<h1>Encuentra tu próximo trabajo</h1>

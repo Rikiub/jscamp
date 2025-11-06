@@ -7,6 +7,8 @@ import styles from "./styles.module.css";
 export function Index() {
 	return (
 		<main className={styles.root}>
+			<title>DevJobs</title>
+
 			<section className={styles.hero}>
 				<img className={styles.hero} src={Background} alt="Banner" />
 
