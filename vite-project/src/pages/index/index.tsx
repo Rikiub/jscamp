@@ -10,7 +10,7 @@ export function Index() {
 			<title>DevJobs</title>
 
 			<section className={styles.hero}>
-				<img className={styles.hero} src={Background} alt="Banner" />
+				<img src={Background} alt="Banner" />
 
 				<h1>Encuentra el trabajo de tus sueños</h1>
 
