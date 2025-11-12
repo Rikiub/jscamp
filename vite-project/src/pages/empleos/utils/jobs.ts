@@ -16,10 +16,12 @@ export function getJobs(): Jobs {
     return data;
 }
 
-export function getTags(jobs: Jobs): string[] {
+const JOBS_CACHE = getJobs();
+
+export function getTags(): string[] {
     const data: string[] = [];
 
-    for (const j of jobs) {
+    for (const j of JOBS_CACHE) {
         for (const t of j.tags) {
             if (data.includes(t)) break;
             data.push(t);
@@ -29,10 +31,10 @@ export function getTags(jobs: Jobs): string[] {
     return data;
 }
 
-export function getLocations(jobs: Jobs): string[] {
+export function getLocations(): string[] {
     const data: string[] = [];
 
-    for (const j of jobs) {
+    for (const j of JOBS_CACHE) {
         if (data.includes(j.location)) break;
         data.push(j.location);
     }

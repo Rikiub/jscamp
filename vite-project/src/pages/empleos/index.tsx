@@ -57,8 +57,8 @@ export function Empleos() {
 	const totalPages = Math.ceil(jobs.length / RESULTS_PER_PAGE);
 
 	// Selects
-	const locations = useMemo(() => getLocations(jobs), [jobs]);
-	const tags = useMemo(() => getTags(jobs), [jobs]);
+	const locations = getLocations();
+	const tags = getTags();
 
 	// Form
 	const searchId = useId();
