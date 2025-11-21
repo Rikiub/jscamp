@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
-import type { Job } from "@/pages/empleos/utils/jobs";
+import type { Job } from "../../api/types";
 import styles from "./styles.module.css";
 
 export function JobCard({
@@ -25,7 +25,6 @@ export function JobCard({
 					<p>
 						{job.company} | {job.location}
 					</p>
-					<p>{job.salary}</p>
 				</div>
 
 				<Button
@@ -40,7 +39,7 @@ export function JobCard({
 			<p>{job.description}</p>
 
 			<footer className={styles.tags}>
-				{job.tags.map((tag) => (
+				{job.tags.technology.map((tag) => (
 					<span key={tag}>{tag}</span>
 				))}
 			</footer>

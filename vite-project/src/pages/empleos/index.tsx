@@ -4,10 +4,10 @@ import { FormLabel } from "@/components/ui/FormLabel";
 import { Pagination } from "@/components/ui/Pagination";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { Select } from "@/components/ui/Select";
+import { useTags } from "./api/tags";
+import { useJobs } from "./api/useJobs";
 import { JobList } from "./components/JobList";
 import styles from "./styles.module.css";
-import { getJobs, getLocations, getTags } from "./utils/jobs";
-import { fuzzyFilter } from "./utils/sanitize";
 
 export function Empleos() {
 	const RESULTS_PER_PAGE = 10;
@@ -31,34 +31,20 @@ export function Empleos() {
 		});
 	}, [setSearchParams, page, search, technology, location]);
 
-	// Filtered
-	const jobs = getJobs();
-	const jobsFiltered = useMemo(() => {
-		let data = jobs;
+	// Filtered Jobs
+	const { jobs } = useJobs({
+		search: search,
+		technology: technology,
+		location: location,
+		limit: RESULTS_PER_PAGE,
+		offset: (page - 1) * RESULTS_PER_PAGE,
+	});
+	const [tags] = useTags();
 
-		if (technology) {
-			data = data.filter((j) => fuzzyFilter(j.tags, technology));
-		}
-		if (location) {
-			data = data.filter((j) => fuzzyFilter([j.location], location));
-		}
-		if (search) {
-			data = data.filter((j) =>
-				fuzzyFilter(
-					[j.title, j.company, j.description, j.location, j.salary, ...j.tags],
-					search,
-				),
-			);
-		}
-
-		data = data.slice((page - 1) * RESULTS_PER_PAGE, page * RESULTS_PER_PAGE);
-		return data;
-	}, [technology, location, search, page, jobs]);
-	const totalPages = Math.ceil(jobs.length / RESULTS_PER_PAGE);
-
-	// Selects
-	const locations = getLocations();
-	const tags = getTags();
+	const totalPages = useMemo(() => {
+		if (!jobs) return 0;
+		return Math.ceil(jobs.total / RESULTS_PER_PAGE);
+	}, [jobs]);
 
 	// Form
 	const searchId = useId();
@@ -75,7 +61,7 @@ export function Empleos() {
 					<p>Explora miles de oportunidades en el sector tecnologico.</p>
 				</header>
 
-				<form onSubmit={(e) => e.preventDefault()}>
+				<form onSubmit={(e) => e.preventDefault()} onChange={() => setPage(1)}>
 					<SearchBar
 						name={searchId}
 						placeholder="Buscar trabajos, empresas o habilidades"
@@ -93,7 +79,7 @@ export function Empleos() {
 								placeholder="Seleciona..."
 								onChange={(event) => setTechnology(event.target.value)}
 							>
-								{tags.map((value) => (
+								{tags?.technology.map((value) => (
 									<option key={value}>{value}</option>
 								))}
 							</Select>
@@ -107,7 +93,7 @@ export function Empleos() {
 								value={location}
 								onChange={(event) => setLocation(event.target.value)}
 							>
-								{locations.map((value) => (
+								{tags?.location.map((value) => (
 									<option key={value}>{value}</option>
 								))}
 							</Select>
@@ -120,7 +106,7 @@ export function Empleos() {
 				<main>
 					<h2>Resultados de busqueda</h2>
 
-					<JobList jobs={jobsFiltered} />
+					<JobList jobs={jobs?.data} />
 
 					<Pagination
 						current={page}
