@@ -1,4 +1,5 @@
 import { useEffect, useId, useMemo, useState } from "react";
+import { Button } from "@/components/ui/Button";
 import { FormLabel } from "@/components/ui/FormLabel";
 import { Pagination } from "@/components/ui/Pagination";
 import { SearchBar } from "@/components/ui/SearchBar";
@@ -12,6 +13,8 @@ export function Empleos() {
 	const RESULTS_PER_PAGE = 10;
 
 	// Filters
+	const [filterActive, setFilterActive] = useState(false);
+
 	const [page, _setPage] = useState(Number(localStorage.getItem("page") ?? 1));
 	const [filters, setFilters] = useState<Filters>({
 		...JSON.parse(localStorage.getItem("filters") ?? ""),
@@ -25,10 +28,12 @@ export function Empleos() {
 	function setTechnology(value: string) {
 		resetPage();
 		setFilters({ ...filters, technology: value });
+		setFilterActive(true);
 	}
 	function setLocation(value: string) {
 		resetPage();
 		setFilters({ ...filters, location: value });
+		setFilterActive(true);
 	}
 	function setPage(value: number) {
 		_setPage(value);
@@ -36,6 +41,18 @@ export function Empleos() {
 	}
 	function resetPage() {
 		setPage(1);
+	}
+	function resetFilters() {
+		resetPage();
+		setFilters({
+			search: "",
+			technology: "",
+			location: "",
+			level: "",
+			limit: 0,
+			offset: 0,
+		});
+		setFilterActive(false);
 	}
 
 	// Save State
@@ -101,6 +118,12 @@ export function Empleos() {
 								))}
 							</Select>
 						</FormLabel>
+
+						{filterActive && (
+							<Button onClick={resetFilters} variant="secondary">
+								Reset Filters
+							</Button>
+						)}
 					</div>
 				</form>
 			</section>

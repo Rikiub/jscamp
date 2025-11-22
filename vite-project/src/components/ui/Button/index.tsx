@@ -10,7 +10,7 @@ export function Button({ variant = "secondary", children, ...rest }: Props) {
 		<button
 			{...rest}
 			type="button"
-			className={`${styles.root} ${styles[variant]}`}
+			className={` ${styles[variant]} ${styles.root} }`}
 		>
 			{children}
 		</button>
