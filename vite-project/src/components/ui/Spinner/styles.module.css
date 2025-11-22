@@ -1,0 +1,11 @@
+@keyframes spinner {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.loading {
+	@media (prefers-reduced-motion: no-preference) {
+		animation: spinner 0.8s linear infinite;
+	}
+}

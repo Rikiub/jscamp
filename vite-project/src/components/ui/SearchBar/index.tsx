@@ -3,25 +3,26 @@ import { type InputHTMLAttributes, useEffect, useState } from "react";
 import styles from "./styles.module.css";
 
 type Props = {
-	className?: string;
 	defaultValue?: string;
 	debounce?: number;
+	className?: string;
 	onSearch?: (value: string) => void;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export function SearchBar({
-	className = "",
 	defaultValue = "",
 	debounce = 300,
+	className = "",
 	onSearch = () => {},
 	...rest
 }: Props) {
 	const [input, setInput] = useState(defaultValue);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <onSearch is not neccesary / memory leak>
 	useEffect(() => {
 		const timeout = setTimeout(() => onSearch(input), debounce);
 		return () => clearTimeout(timeout);
-	}, [input, debounce, onSearch]);
+	}, [input, debounce]);
 
 	return (
 		<search className={`${styles.root} ${className}`}>

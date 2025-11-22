@@ -16,6 +16,7 @@ export interface Filters {
 export function useJobs(filters: Filters = {}) {
     const [jobs, setJobs] = useState<JobsResponse | null>(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const params = new URLSearchParams();
@@ -39,12 +40,17 @@ export function useJobs(filters: Filters = {}) {
 
         async function fetchJobs() {
             try {
+                setLoading(true);
+
                 const res = await fetch(`${API_ENDPOINT}?${params.toString()}`);
+                if (!res.ok) throw new Error();
+
                 const json: RawJobsResponse = await res.json();
                 const data = convertRawApi(json);
+
                 setJobs(data);
             } catch (error) {
-                console.log("Error fetching jobs:", error);
+                if (error instanceof Error) setError(error.message);
             } finally {
                 setLoading(false);
             }
@@ -62,5 +68,6 @@ export function useJobs(filters: Filters = {}) {
     return {
         jobs,
         loading,
+        error,
     };
 }
