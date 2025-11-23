@@ -2,17 +2,31 @@ import type React from "react";
 import styles from "./styles.module.css";
 
 type Props = {
-	variant: "primary" | "secondary" | "success" | "destructive";
+	href?: string;
+	variant?: "primary" | "secondary" | "success" | "destructive";
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
-export function Button({ variant = "secondary", children, ...rest }: Props) {
+export function Button({
+	href,
+	variant = "secondary",
+	children,
+	...rest
+}: Props) {
 	return (
-		<button
-			{...rest}
-			type="button"
-			className={` ${styles[variant]} ${styles.root} }`}
-		>
-			{children}
-		</button>
+		<div>
+			{(href && (
+				<a className={` ${styles[variant]} ${styles.root} }`} href={href}>
+					{children}
+				</a>
+			)) || (
+				<button
+					{...rest}
+					type="button"
+					className={` ${styles[variant]} ${styles.root} }`}
+				>
+					{children}
+				</button>
+			)}
+		</div>
 	);
 }

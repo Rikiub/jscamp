@@ -1,0 +1,32 @@
+.root {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	text-align: center;
+	gap: 1.3rem;
+
+	height: 100vh;
+
+	header {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		gap: 10px;
+
+		svg {
+			width: 100px;
+			height: 100px;
+			color: var(--primary);
+		}
+
+		h1 {
+			font-size: 4rem;
+		}
+
+		p {
+			color: var(--text-muted);
+		}
+	}
+}
