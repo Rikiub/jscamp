@@ -1,22 +1,9 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/Button";
-import type { Job } from "../../api/types";
+import { Link } from "@/components/ui/Link";
+import type { Job } from "@/features/jobs/types";
 import styles from "./styles.module.css";
 
-export function JobCard({
-	job,
-	onApply,
-}: {
-	job: Job;
-	onApply?: (status: boolean) => void;
-}) {
-	const [apply, setApply] = useState(false);
-
-	function handleClick() {
-		setApply(!apply);
-		onApply?.(apply);
-	}
-
+export function JobCard({ job }: { job: Job }) {
 	return (
 		<article className={styles.root}>
 			<header>
@@ -27,13 +14,9 @@ export function JobCard({
 					</p>
 				</div>
 
-				<Button
-					disabled={apply}
-					variant={apply ? "success" : "primary"}
-					onClick={handleClick}
-				>
-					{apply ? "Aplicado" : "Aplicar"}
-				</Button>
+				<Link to={`/empleos/${job.id}`}>
+					<Button variant="primary">Detalles</Button>
+				</Link>
 			</header>
 
 			<p>{job.description}</p>

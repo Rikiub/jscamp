@@ -4,8 +4,8 @@ import { FormLabel } from "@/components/ui/FormLabel";
 import { Pagination } from "@/components/ui/Pagination";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { Select } from "@/components/ui/Select";
-import { useTags } from "./api/tags";
-import { type Filters, useJobs } from "./api/useJobs";
+import { type Filters, useJobsAll } from "@/features/jobs/useJobs";
+import { useTags } from "@/features/jobs/useTags";
 import { JobList } from "./components/JobList";
 import styles from "./styles.module.css";
 
@@ -63,7 +63,7 @@ export function Empleos() {
 	}, [filters.search, filters.technology, filters.location, page]);
 
 	// Filtered Jobs
-	const { jobs, loading } = useJobs(filters);
+	const { jobs, loading } = useJobsAll(filters);
 	const [tags] = useTags();
 
 	const totalPages = useMemo(() => {

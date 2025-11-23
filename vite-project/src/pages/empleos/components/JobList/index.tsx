@@ -1,6 +1,6 @@
 import { Spinner } from "@/components/ui/Spinner";
+import type { Job } from "@/features/jobs/types";
 import { JobCard } from "@/pages/empleos/components/JobCard";
-import type { Job } from "../../api/types";
 import styles from "./styles.module.css";
 
 export function JobList({

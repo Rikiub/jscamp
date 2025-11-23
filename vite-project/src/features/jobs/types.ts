@@ -1,5 +1,12 @@
 // Internal API
 
+export interface Content {
+    description: string;
+    responsibilities: string;
+    requirements: string;
+    about: string;
+}
+
 export interface Tags {
     technology: string[];
     location: string;
@@ -14,6 +21,8 @@ export interface Job {
     description: string;
     tags: Tags;
 }
+
+export type FullJob = { content: Content } & Job;
 
 export interface JobsResponse {
     total: number;

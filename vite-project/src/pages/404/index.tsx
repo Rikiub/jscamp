@@ -3,7 +3,7 @@ import { Link } from "react-router";
 import { Button } from "@/components/ui/Button";
 import styles from "./styles.module.css";
 
-export function NotFoundPage() {
+export function NotFound() {
 	return (
 		<div className={styles.root}>
 			<header>
