@@ -7,17 +7,17 @@ import { Index } from "@/pages/index";
 import { MainLayout } from "./layout/MainLayout";
 
 export const router = createBrowserRouter([
-    {
-        Component: MainLayout,
-        children: [
-            { path: "/", Component: Index },
-            { path: "/empleos", Component: Empleos },
-            {
-                path: "/empleos/:id",
-                Component: JobDetails,
-                loader: async ({ params }) => getJob(params.id ?? ""),
-            },
-            { path: "*", Component: NotFound },
-        ],
-    },
+	{
+		Component: MainLayout,
+		children: [
+			{ path: "/", Component: Index },
+			{ path: "/empleos", Component: Empleos },
+			{
+				path: "/empleos/:id",
+				Component: JobDetails,
+				loader: async ({ params }) => getJob(params.id ?? ""),
+			},
+			{ path: "*", Component: NotFound },
+		],
+	},
 ]);
