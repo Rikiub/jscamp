@@ -1,14 +1,18 @@
-import Markdown from "react-markdown";
 import { useLoaderData } from "react-router";
+import snarkdown from "snarkdown";
 import { Button } from "@/components/ui/Button";
 import type { FullJob } from "@/features/jobs/types";
 import styles from "./styles.module.css";
 
 function Section({ title, content }: { title: string; content: string }) {
+	const html = snarkdown(content);
+
 	return (
 		<section>
 			<h2>{title}</h2>
-			<Markdown>{content}</Markdown>
+
+			{/** biome-ignore lint/security/noDangerouslySetInnerHtml: <simple markdown> */}
+			<p dangerouslySetInnerHTML={{ __html: html }}></p>
 		</section>
 	);
 }
@@ -18,6 +22,8 @@ export function JobDetails() {
 
 	return (
 		<main className={styles.root}>
+			<title>{job.title}</title>
+
 			<header>
 				<div>
 					<h1>{job.title}</h1>

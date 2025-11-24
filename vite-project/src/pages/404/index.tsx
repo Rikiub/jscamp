@@ -6,6 +6,8 @@ import styles from "./styles.module.css";
 export function NotFound() {
 	return (
 		<div className={styles.root}>
+			<title>Error</title>
+
 			<header>
 				<Link2Off />
 

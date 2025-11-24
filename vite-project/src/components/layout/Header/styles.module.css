@@ -1,7 +1,5 @@
 .root {
-	display: grid;
-	grid-template-columns: repeat(3, auto);
-	justify-content: space-between;
+	display: flex;
 	align-items: center;
 	gap: 2rem;
 
@@ -18,6 +16,9 @@
 }
 
 .logo {
+	display: flex;
+	gap: 0.4rem;
+
 	svg {
 		color: var(--primary);
 	}

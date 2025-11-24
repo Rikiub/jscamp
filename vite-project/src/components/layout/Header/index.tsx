@@ -1,15 +1,13 @@
 import { Code } from "lucide-react";
-import { Link } from "@/components/ui/Link";
+import { Link } from "react-router";
 import styles from "./styles.module.css";
 
 export function Header() {
 	return (
 		<header className={styles.root}>
-			<Link to="/">
-				<div className={styles.logo}>
-					<Code size={30} />
-					<p>DevJobs</p>
-				</div>
+			<Link to="/" className={styles.logo}>
+				<Code size={30} />
+				<p>DevJobs</p>
 			</Link>
 
 			<nav className={styles.nav}>
