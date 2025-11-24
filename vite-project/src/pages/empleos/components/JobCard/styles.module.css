@@ -9,6 +9,7 @@
 	header {
 		display: grid;
 		grid-template-columns: 85% auto;
+		justify-content: space-between;
 		align-items: start;
 
 		p {
