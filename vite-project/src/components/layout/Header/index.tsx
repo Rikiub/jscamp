@@ -1,5 +1,5 @@
 import { Code } from "lucide-react";
-import { Link } from "react-router";
+import { Link } from "@/components/ui/Link";
 import styles from "./styles.module.css";
 
 export function Header() {

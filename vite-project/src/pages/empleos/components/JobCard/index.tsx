@@ -1,5 +1,5 @@
-import { Link } from "react-router";
 import { Button } from "@/components/ui/Button";
+import { Link } from "@/components/ui/Link";
 import type { Job } from "@/features/jobs/types";
 import styles from "./styles.module.css";
 
@@ -14,7 +14,7 @@ export function JobCard({ job }: { job: Job }) {
 					</p>
 				</div>
 
-				<Link to={`/empleos/${job.id}`} viewTransition>
+				<Link to={`/empleos/${job.id}`}>
 					<Button variant="primary">Detalles</Button>
 				</Link>
 			</header>

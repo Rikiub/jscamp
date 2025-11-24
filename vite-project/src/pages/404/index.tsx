@@ -1,6 +1,6 @@
 import { Link2Off } from "lucide-react";
-import { Link } from "react-router";
 import { Button } from "@/components/ui/Button";
+import { Link } from "@/components/ui/Link";
 import styles from "./styles.module.css";
 
 export function NotFound() {
