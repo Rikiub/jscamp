@@ -1,0 +1,15 @@
+.root {
+	&,
+	div {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+
+		font-weight: 500;
+		color: var(--text-muted);
+	}
+
+	.end {
+		color: var(--text-primary);
+	}
+}
