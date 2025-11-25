@@ -1,4 +1,5 @@
 import { useEffect, useId, useMemo, useState } from "react";
+import { useSearchParams } from "react-router";
 import { Button } from "@/components/ui/Button";
 import { FormLabel } from "@/components/ui/FormLabel";
 import { Pagination } from "@/components/ui/Pagination";
@@ -11,13 +12,16 @@ import styles from "./styles.module.css";
 
 export function Empleos() {
 	const RESULTS_PER_PAGE = 10;
+	const [params, setSearchParams] = useSearchParams();
 
 	// Filters
 	const [filterActive, setFilterActive] = useState(false);
 
-	const [page, _setPage] = useState(Number(localStorage.getItem("page") ?? 1));
+	const [page, _setPage] = useState(Number(params.get("page") ?? 1));
 	const [filters, setFilters] = useState<Filters>({
-		...JSON.parse(localStorage.getItem("filters") ?? ""),
+		search: params.get("search") ?? "",
+		technology: params.get("technology") ?? "",
+		location: params.get("location") ?? "",
 		limit: RESULTS_PER_PAGE,
 	});
 
@@ -49,8 +53,8 @@ export function Empleos() {
 			technology: "",
 			location: "",
 			level: "",
-			limit: 0,
 			offset: 0,
+			limit: RESULTS_PER_PAGE,
 		});
 		setFilterActive(false);
 	}
@@ -58,8 +62,12 @@ export function Empleos() {
 	// Save State
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <filters>
 	useEffect(() => {
-		localStorage.setItem("filters", JSON.stringify(filters));
-		localStorage.setItem("page", page.toString());
+		setSearchParams({
+			search: filters.search ?? "",
+			page: page.toString() ?? 1,
+			technology: filters.technology ?? "",
+			location: filters.location ?? "",
+		});
 	}, [filters.search, filters.technology, filters.location, page]);
 
 	// Filtered Jobs
