@@ -1,102 +1,73 @@
-![CleanShot 2025-10-01 at 20 11 30@2x](https://github.com/user-attachments/assets/b6ef8402-d367-4a99-b939-8f11dedf91d7)
+# React + TypeScript + Vite
 
-# 🚀 JSCamp InfoJobs
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Bienvenidos al bootcamp intensivo de JavaScript y desarrollo web full-stack diseñado para llevarte desde los fundamentos hasta las tecnologías más avanzadas del ecosistema JavaScript. Veremos HTML, CSS, JavaScript, TypeScript, Node.js, SQL, CI/CD y Docker.
+Currently, two official plugins are available:
 
-## 🎨 El Proyecto Práctico
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-![CleanShot 2025-10-01 at 20 26 08@2x](https://github.com/user-attachments/assets/d9abec4d-ac41-4962-845c-93006bfe768b)
+## React Compiler
 
-A lo largo de este bootcamp, construiremos un proyecto completo **desde cero y paso a paso**, aplicando todos los conocimientos de cada módulo.
+The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
 
-👉 [Ver diseño del proyecto](https://stitch.withgoogle.com/projects/7508115667617706440)
+## Expanding the ESLint configuration
 
-Este proyecto te permitirá consolidar todo lo aprendido y tener una aplicación real en tu portafolio.
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-## 📺 La Plataforma
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-En **[JSCamp.dev](https://jscamp.dev)** encontrarás todos los videos y contenido del bootcamp para que puedas revisarlo cuando quieras. El registro es gratis.
-Los videos y materiales se irán subiendo **poco a poco** a medida que avancemos en el bootcamp.
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
 
-### ¿Tiene certificado?
-
-Sí, existe un certificado opcional y muy limitado de pago que incluye:
-
-- 🎓 **Certificado Digital** - Certifica tus logros en el bootcamp
-- 📝 **Seguimiento de Ejercicios** - Revisaremos y corregiremos tus ejercicios
-- 💬 **Canal Exclusivo en Discord** - Comunidad premium y soporte directo
-- 🎥 **Directos Exclusivos** - Clases de repaso exclusivas con dudas y preguntas
-- 📄 **Revisión de tu CV** - Equipo de expertos revisan tu CV y te dan feedback
-- 🏢 **Workshop Presencial** - Entrada asegurada a los workshops de Barcelona y Madrid
-
-**Entra a [https://jscamp.dev](https://jscamp.dev), inicia sesión y consigue acceso.**
-
-## 📚 Contenido del Bootcamp
-
-- **00** - HTML & CSS
-- **01** - JavaScript
-- **02** - React
-- **03** - Estado Global y React Router
-- **04** - Node.js
-- **05** - TypeScript
-- **06** - Integración de IA
-- **07** - SQL
-- **08** - CI/CD
-- **09** - Docker
-
-## 💻 Requisitos de Instalación
-
-Antes de comenzar, asegúrate de tener instalado el siguiente software:
-
-- **Navegador moderno** - Chrome, Firefox, Edge o Safari actualizado
-- **[Visual Studio Code](https://code.visualstudio.com/)** - Editor de código (recomendado)
-- **[Extensión Live Preview](https://marketplace.visualstudio.com/items?itemName=ms-vscode.live-server)** - Extensión para ver HTML/CSS
-- **[Node.js](https://nodejs.org/)** (versión 20 o superior) - Runtime de JavaScript
-- **[Git](https://git-scm.com/)** - Control de versiones
-- **[Docker](https://www.docker.com/)** - Para el módulo de Docker
-- **[Terminal Warp](https://midu.link/warp)** - Terminal con IA y Agentes
-
-## 👨‍💻 Instructor
-
-Este bootcamp es impartido por **midudev**, desarrollador y creador de contenido educativo con una gran comunidad en español.
-
-### 🌐 Redes Sociales
-
-- 🐦 **X**: [@midudev](https://twitter.com/midudev)
-- 📺 **YouTube**: [@midudev](https://youtube.com/@midudev)
-- 🎮 **Twitch**: [midudev](https://twitch.tv/midudev)
-- 📸 **Instagram**: [@midu.dev](https://instagram.com/midu.dev)
-- 💼 **LinkedIn**: [midudev](https://linkedin.com/in/midudev)
-- 🌍 **Web**: [midu.dev](https://midu.dev)
-
-## 🎯 Objetivos
-
-Al finalizar JSCAMP serás capaz de:
-
-- ✅ Construir aplicaciones web completas desde cero
-- ✅ Dominar el ecosistema de JavaScript moderno
-- ✅ Crear APIs REST con Node.js
-- ✅ Desarrollar interfaces con React
-- ✅ Implementar bases de datos SQL
-- ✅ Configurar pipelines de CI/CD
-- ✅ Containerizar aplicaciones con Docker
-- ✅ Aplicar TypeScript en proyectos reales
-
-## 🚀 Cómo Empezar
-
-Cada módulo contiene ejercicios prácticos y proyectos reales. Navega a la carpeta correspondiente y sigue las instrucciones.
-
-```bash
-# Clona el repositorio
-git clone git@github.com:midudev/jscamp.git
-
-# Navega al módulo que desees
-cd jscamp/00-html-css
-
-# ¡Comienza a aprender!
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
 
----
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-⭐️ Si este contenido te resulta útil, no olvides dar una estrella al repositorio
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
