@@ -5,7 +5,7 @@ import styles from "./styles.module.css";
 
 export function NotFound() {
 	return (
-		<div className={styles.root}>
+		<main className={styles.root}>
 			<title>Error</title>
 
 			<header>
@@ -20,6 +20,6 @@ export function NotFound() {
 			<Link to="/">
 				<Button>Volver al inicio</Button>
 			</Link>
-		</div>
+		</main>
 	);
 }

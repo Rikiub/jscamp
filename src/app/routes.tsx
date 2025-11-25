@@ -9,6 +9,7 @@ import { MainLayout } from "./layout/MainLayout";
 export const router = createBrowserRouter([
 	{
 		Component: MainLayout,
+		ErrorBoundary: NotFound,
 		children: [
 			{ path: "/", Component: Index },
 			{ path: "/empleos", Component: Empleos },
