@@ -1,10 +1,28 @@
 import { Briefcase } from "lucide-react";
+import { useNavigate } from "react-router";
 import { SearchBar } from "@/components/ui/SearchBar";
 import Background from "./assets/background.webp";
 import { AboutCard } from "./components/AboutCard";
 import styles from "./styles.module.css";
+import { useId, type FormEvent } from "react";
 
 export function Index() {
+	const navigate = useNavigate();
+	const idSearch = useId();
+
+	function onSubmit(event: FormEvent<HTMLFormElement>) {
+		event.preventDefault();
+
+		const fd = new FormData(event.currentTarget);
+		const search = fd.get(idSearch);
+
+		if (search)
+			navigate(
+				{ pathname: "/empleos", search: `?search=${search}` },
+				{ viewTransition: true },
+			);
+	}
+
 	return (
 		<main className={styles.root}>
 			<title>DevJobs</title>
@@ -19,7 +37,12 @@ export function Index() {
 					próxima oportunidad.
 				</p>
 
-				<SearchBar placeholder="Buscar trabajos, empresas o habilidades" />
+				<form className={styles.formSearch} onSubmit={onSubmit}>
+					<SearchBar
+						name={idSearch}
+						placeholder="Buscar trabajos, empresas o habilidades"
+					/>
+				</form>
 			</section>
 
 			<section className={styles.about}>
