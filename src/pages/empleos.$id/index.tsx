@@ -2,9 +2,9 @@ import { type LoaderFunctionArgs, useLoaderData } from "react-router";
 import snarkdown from "snarkdown";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { Button } from "@/components/ui/Button";
-import { useAuth } from "@/context/AuthContext";
 import type { FullJob } from "@/features/jobs/types";
 import { getJob } from "@/features/jobs/useJobs";
+import { useAuth } from "@/store/authStore";
 import styles from "./styles.module.css";
 
 export async function loader({ params }: LoaderFunctionArgs) {

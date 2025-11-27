@@ -1,7 +1,7 @@
 import { Code } from "lucide-react";
 import { NavLink, type NavLinkProps } from "react-router";
 import { Button } from "@/components/ui/Button";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/store/authStore";
 import styles from "./styles.module.css";
 
 function Link({ className, children, ...rest }: NavLinkProps) {
