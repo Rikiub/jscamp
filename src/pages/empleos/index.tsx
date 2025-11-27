@@ -10,7 +10,7 @@ import { useTags } from "@/features/jobs/useTags";
 import { JobList } from "./components/JobList";
 import styles from "./styles.module.css";
 
-export function Empleos() {
+export default function Empleos() {
 	const RESULTS_PER_PAGE = 10;
 	const [params, setSearchParams] = useSearchParams();
 

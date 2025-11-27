@@ -1,12 +1,12 @@
 import { Briefcase } from "lucide-react";
+import { type FormEvent, useId } from "react";
 import { useNavigate } from "react-router";
 import { SearchBar } from "@/components/ui/SearchBar";
 import Background from "./assets/background.webp";
 import { AboutCard } from "./components/AboutCard";
 import styles from "./styles.module.css";
-import { useId, type FormEvent } from "react";
 
-export function Index() {
+export default function Index() {
 	const navigate = useNavigate();
 	const idSearch = useId();
 

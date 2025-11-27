@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/Button";
 import { Link } from "@/components/ui/Link";
 import styles from "./styles.module.css";
 
-export function NotFound() {
+export default function NotFound() {
 	return (
 		<main className={styles.root}>
 			<title>Error</title>

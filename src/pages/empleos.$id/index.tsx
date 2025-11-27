@@ -1,9 +1,14 @@
-import { useLoaderData } from "react-router";
+import { type LoaderFunctionArgs, useLoaderData } from "react-router";
 import snarkdown from "snarkdown";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { Button } from "@/components/ui/Button";
 import type { FullJob } from "@/features/jobs/types";
+import { getJob } from "@/features/jobs/useJobs";
 import styles from "./styles.module.css";
+
+export async function loader({ params }: LoaderFunctionArgs) {
+	return getJob(params.id ?? "");
+}
 
 function Section({ title, content }: { title: string; content: string }) {
 	const html = snarkdown(content);
@@ -18,7 +23,7 @@ function Section({ title, content }: { title: string; content: string }) {
 	);
 }
 
-export function JobDetails() {
+export default function Details() {
 	const job = useLoaderData<FullJob>();
 
 	return (
