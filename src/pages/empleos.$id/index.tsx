@@ -2,12 +2,35 @@ import { type LoaderFunctionArgs, useLoaderData } from "react-router";
 import snarkdown from "snarkdown";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { Button } from "@/components/ui/Button";
+import { useAuth } from "@/context/AuthContext";
 import type { FullJob } from "@/features/jobs/types";
 import { getJob } from "@/features/jobs/useJobs";
 import styles from "./styles.module.css";
 
 export async function loader({ params }: LoaderFunctionArgs) {
 	return getJob(params.id ?? "");
+}
+
+function Header({ job }: { job: FullJob }) {
+	const { isLoggedIn } = useAuth();
+
+	return (
+		<header>
+			<div>
+				<h1>{job.title}</h1>
+				<p>
+					{job.company} | {job.location}
+				</p>
+			</div>
+
+			<Button
+				disabled={!isLoggedIn}
+				variant={isLoggedIn ? "primary" : "secondary"}
+			>
+				{isLoggedIn ? "Aplicar ahora" : "Iniciar sesión para aplicar"}
+			</Button>
+		</header>
+	);
 }
 
 function Section({ title, content }: { title: string; content: string }) {
@@ -35,16 +58,7 @@ export default function Details() {
 			<article>
 				<title>{job.title}</title>
 
-				<header>
-					<div>
-						<h1>{job.title}</h1>
-						<p>
-							{job.company} | {job.location}
-						</p>
-					</div>
-
-					<Button variant="primary">Aplicar ahora</Button>
-				</header>
+				<Header job={job} />
 
 				<Section
 					title="Descripción del puesto"
