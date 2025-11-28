@@ -1,7 +1,7 @@
 import { Code } from "lucide-react";
 import { NavLink, type NavLinkProps } from "react-router";
 import { Button } from "@/components/ui/Button";
-import { useAuth } from "@/store/authStore";
+import { useAuthStore } from "@/store/authStore";
 import styles from "./styles.module.css";
 
 function Link({ className, children, ...rest }: NavLinkProps) {
@@ -19,7 +19,7 @@ function Link({ className, children, ...rest }: NavLinkProps) {
 }
 
 export function Header() {
-	const { isLoggedIn, login, logout } = useAuth();
+	const { isLoggedIn, login, logout } = useAuthStore();
 
 	return (
 		<header className={styles.root}>

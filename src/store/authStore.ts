@@ -8,7 +8,7 @@ export interface AuthStoreType {
 	logout: () => void;
 }
 
-export const useAuth = create<AuthStoreType>()(
+export const useAuthStore = create<AuthStoreType>()(
 	persist(
 		(set) => ({
 			isLoggedIn: false,

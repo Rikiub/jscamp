@@ -2,12 +2,12 @@ import { Button } from "@/components/ui/Button";
 import { FavoriteIcon } from "@/components/ui/FavoriteIcon";
 import { Link } from "@/components/ui/Link";
 import type { Job } from "@/features/jobs/types";
-import { useAuth } from "@/store/authStore";
+import { useAuthStore } from "@/store/authStore";
 import { useFavoritesStore } from "../../store/favorites";
 import styles from "./styles.module.css";
 
 function Actions({ job }: { job: Job }) {
-	const { isLoggedIn } = useAuth();
+	const { isLoggedIn } = useAuthStore();
 	const fav = useFavoritesStore();
 
 	return (
