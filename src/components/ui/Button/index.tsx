@@ -1,7 +1,7 @@
 import type React from "react";
 import styles from "./styles.module.css";
 
-type Props = {
+export type ButtonProps = {
 	href?: string;
 	variant?: "primary" | "secondary" | "success" | "destructive" | "ghost";
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
@@ -11,7 +11,7 @@ export function Button({
 	variant = "secondary",
 	children,
 	...rest
-}: Props) {
+}: ButtonProps) {
 	return (
 		<div>
 			{(href && (
