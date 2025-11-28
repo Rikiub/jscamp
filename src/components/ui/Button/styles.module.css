@@ -35,3 +35,11 @@
 .destructive {
 	--bg: oklab(68.093% 0.15263 0.06306);
 }
+.ghost {
+	--bg: transparent;
+	padding: 0.2rem;
+
+	&:active {
+		background-color: transparent;
+	}
+}

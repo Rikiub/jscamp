@@ -3,7 +3,7 @@ import styles from "./styles.module.css";
 
 type Props = {
 	href?: string;
-	variant?: "primary" | "secondary" | "success" | "destructive";
+	variant?: "primary" | "secondary" | "success" | "destructive" | "ghost";
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 export function Button({
