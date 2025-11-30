@@ -1,6 +1,8 @@
-import { Code } from "lucide-react";
-import { NavLink, useNavigate, type NavLinkProps } from "react-router";
+import { Code, LogOut, User } from "lucide-react";
+import { NavLink, type NavLinkProps, useNavigate } from "react-router";
+import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
+import { Dropdown } from "@/components/ui/Dropdown";
 import { useAuthStore } from "@/store/authStore";
 import styles from "./styles.module.css";
 
@@ -39,15 +41,33 @@ export function Header() {
 				</nav>
 			</div>
 
-			<div>
-				<Button
-					variant={isLoggedIn ? "secondary" : "primary"}
-					onClick={() =>
-						isLoggedIn ? logout() : navigate("/login", { viewTransition: true })
-					}
-				>
-					{isLoggedIn ? "Cerrar sesión" : "Iniciar sesión"}
-				</Button>
+			<div className={styles.user}>
+				{!isLoggedIn && (
+					<Button
+						variant="primary"
+						onClick={() => navigate("/login", { viewTransition: true })}
+					>
+						Iniciar sesión
+					</Button>
+				)}
+
+				{isLoggedIn && (
+					<Dropdown
+						items={[
+							{ Icon: User, label: "Perfil", to: "/perfil" },
+							{
+								Icon: LogOut,
+								label: "Cerrar sesión",
+								onClick: () => {
+									logout();
+									navigate("/", { viewTransition: true });
+								},
+							},
+						]}
+					>
+						<Avatar />
+					</Dropdown>
+				)}
 			</div>
 		</header>
 	);

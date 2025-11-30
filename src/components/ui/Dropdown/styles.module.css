@@ -1,0 +1,40 @@
+.root {
+	position: relative;
+
+	> button {
+		background-color: transparent;
+	}
+}
+
+.menu {
+	display: grid;
+
+	background-color: var(--background);
+	padding: 1rem;
+	width: 200px;
+
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+
+	position: absolute;
+	top: calc(100% + 6px);
+	left: 0;
+
+	list-style: none;
+
+	button {
+		text-align: left;
+	}
+
+	.item {
+		display: flex;
+		align-items: center;
+	}
+}
+
+/* when flipped, align to the right edge of the trigger */
+.menuRight {
+	left: auto;
+	right: 0;
+}

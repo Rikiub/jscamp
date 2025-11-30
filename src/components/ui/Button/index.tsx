@@ -1,8 +1,9 @@
 import type React from "react";
+import { Link } from "../Link";
 import styles from "./styles.module.css";
 
 export type ButtonProps = {
-	href?: string;
+	to?: string;
 	variant?:
 		| "primary"
 		| "secondary"
@@ -13,23 +14,26 @@ export type ButtonProps = {
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 export function Button({
-	href,
+	to,
 	type = "button",
 	variant = "secondary",
 	children,
 	...rest
 }: ButtonProps) {
 	return (
-		<div>
-			{(href && (
-				<a className={` ${styles[variant]} ${styles.root} }`} href={href}>
+		<div className={styles.parent}>
+			{(to && (
+				<Link
+					className={` ${styles[variant]} ${styles.link} ${styles.root} }`}
+					to={to}
+				>
 					{children}
-				</a>
+				</Link>
 			)) || (
 				<button
 					{...rest}
 					type={type}
-					className={` ${styles[variant]} ${styles.root} }`}
+					className={` ${styles[variant]} ${styles.button} ${styles.root} }`}
 				>
 					{children}
 				</button>
