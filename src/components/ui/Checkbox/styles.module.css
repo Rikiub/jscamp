@@ -1,0 +1,27 @@
+.root {
+	appearance: none;
+	background-color: var(--background);
+	border: 1px solid var(--border);
+
+	width: 24px;
+	height: 24px;
+	border-radius: 6px;
+	position: relative;
+
+	cursor: pointer;
+	transition: background 0.3s;
+
+	&:checked {
+		background: var(--primary);
+	}
+
+	&:checked::after {
+		content: "✔";
+		font-size: 16px;
+		color: white;
+
+		position: absolute;
+		top: 1px;
+		left: 6px;
+	}
+}

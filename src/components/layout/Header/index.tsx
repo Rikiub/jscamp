@@ -1,5 +1,5 @@
 import { Code } from "lucide-react";
-import { NavLink, type NavLinkProps } from "react-router";
+import { NavLink, useNavigate, type NavLinkProps } from "react-router";
 import { Button } from "@/components/ui/Button";
 import { useAuthStore } from "@/store/authStore";
 import styles from "./styles.module.css";
@@ -19,7 +19,8 @@ function Link({ className, children, ...rest }: NavLinkProps) {
 }
 
 export function Header() {
-	const { isLoggedIn, login, logout } = useAuthStore();
+	const navigate = useNavigate();
+	const { isLoggedIn, logout } = useAuthStore();
 
 	return (
 		<header className={styles.root}>
@@ -41,7 +42,9 @@ export function Header() {
 			<div>
 				<Button
 					variant={isLoggedIn ? "secondary" : "primary"}
-					onClick={() => (isLoggedIn ? logout() : login())}
+					onClick={() =>
+						isLoggedIn ? logout() : navigate("/login", { viewTransition: true })
+					}
 				>
 					{isLoggedIn ? "Cerrar sesión" : "Iniciar sesión"}
 				</Button>

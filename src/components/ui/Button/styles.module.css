@@ -29,6 +29,11 @@
 .secondary {
 	--bg: var(--surface);
 }
+.outline {
+	--bg: var(--background);
+	font-weight: normal;
+	border: 1px solid var(--border);
+}
 .success {
 	--bg: oklab(61.951% -0.13 0.08308);
 }

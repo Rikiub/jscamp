@@ -1,0 +1,46 @@
+.root {
+	--radius: 0.5rem;
+
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+
+	background-color: var(--background);
+	color: var(--text-primary);
+
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+
+	cursor: pointer;
+	transition: all linear 0.1s;
+
+	&:focus-within {
+		outline: 1px solid oklch(from var(--border) calc(l + 1) c h);
+	}
+
+	input {
+		width: 100%;
+		padding: 0.8rem;
+
+		background-color: transparent;
+		color: var(--text-primary);
+
+		border-radius: var(--radius);
+		border-bottom-left-radius: 0;
+		border-top-left-radius: 0;
+
+		&:focus {
+			outline: unset;
+		}
+	}
+	input::placeholder {
+		color: var(--text-muted);
+		font-size: 0.9rem;
+	}
+
+	.icon {
+		display: flex;
+		margin-left: 1rem;
+		color: var(--text-muted);
+	}
+}

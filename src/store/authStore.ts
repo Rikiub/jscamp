@@ -4,7 +4,7 @@ import { persist } from "zustand/middleware";
 export interface AuthStoreType {
 	isLoggedIn: boolean;
 
-	login: () => void;
+	login: (username: string, password: string) => void;
 	logout: () => void;
 }
 

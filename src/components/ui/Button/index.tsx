@@ -3,11 +3,18 @@ import styles from "./styles.module.css";
 
 export type ButtonProps = {
 	href?: string;
-	variant?: "primary" | "secondary" | "success" | "destructive" | "ghost";
+	variant?:
+		| "primary"
+		| "secondary"
+		| "outline"
+		| "success"
+		| "destructive"
+		| "ghost";
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 export function Button({
 	href,
+	type = "button",
 	variant = "secondary",
 	children,
 	...rest
@@ -21,7 +28,7 @@ export function Button({
 			)) || (
 				<button
 					{...rest}
-					type="button"
+					type={type}
 					className={` ${styles[variant]} ${styles.root} }`}
 				>
 					{children}

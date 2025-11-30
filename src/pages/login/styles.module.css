@@ -1,0 +1,58 @@
+.root {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	gap: 2rem;
+
+	margin: 5rem auto;
+
+	header {
+		text-align: center;
+
+		h1 {
+			font-size: 2rem;
+		}
+		p {
+			color: var(--text-muted);
+		}
+	}
+}
+
+.card {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+
+	max-width: 400px;
+
+	hr {
+		border: 1px solid var(--border);
+	}
+
+	button {
+		width: 100%;
+	}
+}
+
+.separator {
+	text-align: center;
+	font-size: 0.8rem;
+	color: var(--text-muted);
+}
+
+.password {
+	display: flex;
+	justify-content: space-between;
+
+	font-size: 0.9rem;
+
+	.remember {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.forget {
+		color: var(--primary);
+	}
+}
