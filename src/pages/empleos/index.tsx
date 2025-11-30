@@ -1,7 +1,7 @@
 import { useEffect, useId, useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
 import { Button } from "@/components/ui/Button";
-import { FormLabel } from "@/components/ui/FormLabel";
+import { Label } from "@/components/ui/Label";
 import { Pagination } from "@/components/ui/Pagination";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { Select } from "@/components/ui/Select";
@@ -99,7 +99,7 @@ export default function Empleos() {
 					/>
 
 					<div className={styles.filters}>
-						<FormLabel>
+						<Label>
 							Tecnologia
 							<Select
 								name={useId()}
@@ -111,9 +111,9 @@ export default function Empleos() {
 									<option key={value}>{value}</option>
 								))}
 							</Select>
-						</FormLabel>
+						</Label>
 
-						<FormLabel>
+						<Label>
 							Ubicación
 							<Select
 								placeholder="Seleciona..."
@@ -125,7 +125,7 @@ export default function Empleos() {
 									<option key={value}>{value}</option>
 								))}
 							</Select>
-						</FormLabel>
+						</Label>
 
 						{filterActive && (
 							<Button onClick={resetFilters} variant="secondary">
