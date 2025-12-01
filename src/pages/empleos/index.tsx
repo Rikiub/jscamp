@@ -60,7 +60,6 @@ export default function Empleos() {
 	}
 
 	// Save State
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <filters>
 	useEffect(() => {
 		setSearchParams({
 			search: filters.search ?? "",
@@ -68,7 +67,13 @@ export default function Empleos() {
 			technology: filters.technology ?? "",
 			location: filters.location ?? "",
 		});
-	}, [filters.search, filters.technology, filters.location, page]);
+	}, [
+		filters.search,
+		filters.technology,
+		filters.location,
+		page,
+		setSearchParams,
+	]);
 
 	// Filtered Jobs
 	const { jobs, loading } = useJobsAll(filters);

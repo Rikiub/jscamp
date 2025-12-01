@@ -1,5 +1,5 @@
 import { Lock, Mail } from "lucide-react";
-import { type FormEvent, useId } from "react";
+import { useId } from "react";
 import { Navigate, useNavigate } from "react-router";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -22,14 +22,11 @@ export default function Login() {
 		return <Navigate to={redirectTo} />;
 	}
 
-	function handleSubmit(event: FormEvent<HTMLFormElement>) {
-		event.preventDefault();
+	function onAction(fd: FormData) {
+		const user = fd.get(idUsername) as string;
+		const pass = fd.get(idPassword) as string;
 
-		const fd = new FormData(event.currentTarget);
-		const user = fd.get(idUsername) ?? "";
-		const pass = fd.get(idPassword) ?? "";
-
-		login(user.toString(), pass.toString());
+		login(user, pass);
 		navigate(redirectTo, { viewTransition: true });
 	}
 
@@ -41,11 +38,7 @@ export default function Login() {
 			</header>
 
 			<Card className={styles.card}>
-				<form
-					id={idForm}
-					style={{ display: "contents" }}
-					onSubmit={handleSubmit}
-				>
+				<form id={idForm} style={{ display: "contents" }} action={onAction}>
 					<Input Icon={Mail} id={idUsername} placeholder="Email" />
 					<Input Icon={Lock} id={idPassword} placeholder="Contraseña" />
 				</form>
