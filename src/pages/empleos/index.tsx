@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
 import { Button } from "@/components/ui/Button";
-import { Label } from "@/components/ui/Label";
 import { Pagination } from "@/components/ui/Pagination";
 import { SearchInput } from "@/components/ui/SearchInput";
 import { Select } from "@/components/ui/Select";
@@ -95,31 +94,25 @@ export default function Empleos() {
 					/>
 
 					<div className={styles.filters}>
-						<Label>
-							Tecnologia
-							<Select
-								placeholder="Seleciona..."
-								value={filters.technology}
-								onChange={(v) => setFilter("technology", v)}
-							>
-								{tags?.technology.map((value) => (
-									<option key={value}>{value}</option>
-								))}
-							</Select>
-						</Label>
+						<Select
+							placeholder="Tecnologia"
+							value={filters.technology}
+							onChange={(v) => setFilter("technology", v)}
+						>
+							{tags?.technology.map((value) => (
+								<option key={value}>{value}</option>
+							))}
+						</Select>
 
-						<Label>
-							Ubicación
-							<Select
-								placeholder="Seleciona..."
-								value={filters.location}
-								onChange={(v) => setFilter("location", v)}
-							>
-								{tags?.location.map((value) => (
-									<option key={value}>{value}</option>
-								))}
-							</Select>
-						</Label>
+						<Select
+							placeholder="Ubicación"
+							value={filters.location}
+							onChange={(v) => setFilter("location", v)}
+						>
+							{tags?.location.map((value) => (
+								<option key={value}>{value}</option>
+							))}
+						</Select>
 
 						{filterActive && (
 							<Button onClick={resetFilters} variant="secondary">

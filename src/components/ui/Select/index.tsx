@@ -19,11 +19,17 @@ export function Select({
 			{...rest}
 			value={value}
 			onChange={(e) => onChange?.(e.target.value)}
-			className={`${styles.root} ${className ?? ""} ${
-				placeholder && !value ? styles.placeholder : ""
-			}`}
+			className={`
+				${styles.root}
+				${placeholder && !value ? styles.placeholder : ""}
+				${className ?? ""}
+			`}
 		>
-			{placeholder && <option value="">{placeholder}</option>}
+			{placeholder && (
+				<option value="" disabled hidden>
+					{placeholder}
+				</option>
+			)}
 			{children}
 		</select>
 	);

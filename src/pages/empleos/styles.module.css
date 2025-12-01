@@ -27,8 +27,10 @@
 .filters {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-	align-items: end;
 	gap: 1.5rem;
-
 	margin-top: 15px;
+
+	button {
+		padding: 0.8rem;
+	}
 }
