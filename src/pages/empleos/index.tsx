@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
 import { Button } from "@/components/ui/Button";
 import { Label } from "@/components/ui/Label";
@@ -10,14 +10,19 @@ import { useTags } from "@/features/jobs/useTags";
 import { JobList } from "./components/JobList";
 import styles from "./styles.module.css";
 
+interface UrlParams {
+	page?: string;
+	search?: string;
+	technology?: string;
+	location?: string;
+}
+
 export default function Empleos() {
 	const RESULTS_PER_PAGE = 10;
 	const [params, setSearchParams] = useSearchParams();
 
 	// Filters
 	const [filterActive, setFilterActive] = useState(false);
-
-	const [page, _setPage] = useState(Number(params.get("page") ?? 1));
 	const [filters, setFilters] = useState<Filters>({
 		search: params.get("search") ?? "",
 		technology: params.get("technology") ?? "",
@@ -25,55 +30,42 @@ export default function Empleos() {
 		limit: RESULTS_PER_PAGE,
 	});
 
-	function setSearch(value: string) {
-		resetPage();
-		setFilters({ ...filters, search: value });
-	}
-	function setTechnology(value: string) {
-		resetPage();
-		setFilters({ ...filters, technology: value });
-		setFilterActive(true);
-	}
-	function setLocation(value: string) {
-		resetPage();
-		setFilters({ ...filters, location: value });
-		setFilterActive(true);
-	}
+	const [page, _setPage] = useState(Number(params.get("page") ?? 1));
 	function setPage(value: number) {
 		_setPage(value);
 		setFilters({ ...filters, offset: (value - 1) * RESULTS_PER_PAGE });
 	}
-	function resetPage() {
+
+	function setFilter<K extends keyof Filters>(key: K, value: Filters[K]) {
 		setPage(1);
+		setFilters((prev) => ({
+			...prev,
+			[key]: value,
+		}));
+		setFilterActive(true);
 	}
 	function resetFilters() {
-		resetPage();
+		setPage(1);
 		setFilters({
 			search: "",
 			technology: "",
 			location: "",
-			level: "",
-			offset: 0,
 			limit: RESULTS_PER_PAGE,
 		});
 		setFilterActive(false);
 	}
 
 	// Save State
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <unnecesary>
 	useEffect(() => {
-		setSearchParams({
+		const params: UrlParams = {
+			page: page.toString(),
 			search: filters.search ?? "",
-			page: page.toString() ?? 1,
 			technology: filters.technology ?? "",
 			location: filters.location ?? "",
-		});
-	}, [
-		filters.search,
-		filters.technology,
-		filters.location,
-		page,
-		setSearchParams,
-	]);
+		};
+		setSearchParams({ ...params });
+	}, [page, filters.search, filters.technology, filters.location]);
 
 	// Filtered Jobs
 	const { jobs, loading } = useJobsAll(filters);
@@ -96,10 +88,9 @@ export default function Empleos() {
 
 				<form onSubmit={(e) => e.preventDefault()}>
 					<SearchBar
-						name={useId()}
 						placeholder="Buscar trabajos, empresas o habilidades"
 						defaultValue={filters.search}
-						onSearch={(v) => setSearch(v)}
+						onSearch={(v) => setFilter("search", v)}
 						debounce={300}
 					/>
 
@@ -107,10 +98,9 @@ export default function Empleos() {
 						<Label>
 							Tecnologia
 							<Select
-								name={useId()}
-								value={filters.technology}
 								placeholder="Seleciona..."
-								onChange={(e) => setTechnology(e.target.value)}
+								value={filters.technology}
+								onChange={(v) => setFilter("technology", v)}
 							>
 								{tags?.technology.map((value) => (
 									<option key={value}>{value}</option>
@@ -122,9 +112,8 @@ export default function Empleos() {
 							Ubicación
 							<Select
 								placeholder="Seleciona..."
-								name={useId()}
 								value={filters.location}
-								onChange={(e) => setLocation(e.target.value)}
+								onChange={(v) => setFilter("location", v)}
 							>
 								{tags?.location.map((value) => (
 									<option key={value}>{value}</option>

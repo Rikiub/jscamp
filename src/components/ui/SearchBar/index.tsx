@@ -1,5 +1,5 @@
 import { Search } from "lucide-react";
-import { type InputHTMLAttributes, useEffect, useState } from "react";
+import { type InputHTMLAttributes, useEffect, useRef, useState } from "react";
 import styles from "./styles.module.css";
 
 type Props = {
@@ -17,9 +17,15 @@ export function SearchBar({
 	...rest
 }: Props) {
 	const [input, setInput] = useState(defaultValue);
+	const mounted = useRef(false);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <onSearch is not neccesary / memory leak>
 	useEffect(() => {
+		if (!mounted.current) {
+			mounted.current = true;
+			return;
+		}
+
 		const timeout = setTimeout(() => onSearch(input), debounce);
 		return () => clearTimeout(timeout);
 	}, [input, debounce]);

@@ -3,22 +3,25 @@ import styles from "./styles.module.css";
 
 type Props = {
 	placeholder?: string | null;
-} & React.SelectHTMLAttributes<HTMLSelectElement>;
+	onChange?: (value: string) => void;
+} & Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "onChange">;
 
 export function Select({
 	value,
 	className,
 	children,
 	placeholder,
+	onChange,
 	...rest
 }: Props) {
 	return (
 		<select
+			{...rest}
+			value={value}
+			onChange={(e) => onChange?.(e.target.value)}
 			className={`${styles.root} ${className ?? ""} ${
 				placeholder && !value ? styles.placeholder : ""
 			}`}
-			value={value}
-			{...rest}
 		>
 			{placeholder && <option value="">{placeholder}</option>}
 			{children}
