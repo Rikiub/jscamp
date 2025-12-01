@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router";
 import { Button } from "@/components/ui/Button";
 import { Label } from "@/components/ui/Label";
 import { Pagination } from "@/components/ui/Pagination";
-import { SearchInput } from "@/components/ui/SearchBar";
+import { SearchInput } from "@/components/ui/SearchInput";
 import { Select } from "@/components/ui/Select";
 import { type Filters, useJobsAll } from "@/features/jobs/useJobs";
 import { useTags } from "@/features/jobs/useTags";
