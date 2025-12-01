@@ -9,7 +9,7 @@ type Props = {
 	onSearch?: (value: string) => void;
 } & InputHTMLAttributes<HTMLInputElement>;
 
-export function SearchBar({
+export function SearchInput({
 	defaultValue = "",
 	debounce = 300,
 	className = "",

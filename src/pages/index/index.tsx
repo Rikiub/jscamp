@@ -1,7 +1,7 @@
 import { Briefcase } from "lucide-react";
 import { useId } from "react";
 import { useNavigate } from "react-router";
-import { SearchBar } from "@/components/ui/SearchBar";
+import { SearchInput } from "@/components/ui/SearchBar";
 import Background from "./assets/background.webp";
 import { AboutCard } from "./components/AboutCard";
 import styles from "./styles.module.css";
@@ -35,7 +35,7 @@ export default function Index() {
 				</p>
 
 				<form className={styles.formSearch} action={onAction}>
-					<SearchBar
+					<SearchInput
 						name={idSearch}
 						placeholder="Buscar trabajos, empresas o habilidades"
 					/>
