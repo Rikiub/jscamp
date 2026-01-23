@@ -1,31 +1,7 @@
 {
-	"name": "vite-project",
+	"name": "project-monorepo",
 	"private": true,
-	"version": "0.0.0",
-	"type": "module",
 	"scripts": {
-		"dev": "vite",
-		"build": "tsc -b && vite build",
-		"format": "biome format . --write",
-		"lint": "biome lint . --write",
-		"preview": "vite preview"
-	},
-	"dependencies": {
-		"lucide-react": "^0.548.0",
-		"react": "^19.1.1",
-		"react-dom": "^19.1.1",
-		"react-router": "^7.9.5",
-		"snarkdown": "^2.0.0",
-		"zustand": "^5.0.8"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "^2.3.1",
-		"@types/node": "^24.6.0",
-		"@types/react": "^19.1.16",
-		"@types/react-dom": "^19.1.9",
-		"@vitejs/plugin-react": "^5.1.1",
-		"globals": "^16.4.0",
-		"typescript": "~5.9.3",
-		"vite": "npm:rolldown-vite@^7.2.4"
+		"dev": "pnpm -r --parallel dev"
 	}
 }
