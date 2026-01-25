@@ -1,15 +1,16 @@
-import { type Response, Router } from "express";
-import { DEFAULTS } from "../config.ts";
-import { JobsModel } from "./model.ts";
+import { DEFAULTS } from "../config.js";
+import { JobsModel } from "./model.js";
 import type { JobsResponse } from "./types.ts";
+import { type Context, Hono } from "hono";
 
-export const JobsRouter = Router();
+const app = new Hono();
+export default app;
 
 // getAll
-JobsRouter.get("/", async (req, res) => {
-	const { limit, offset } = req.query;
+app.get("/", async (c) => {
+	const { limit, offset } = c.req.query();
 
-	const jobs = await JobsModel.getAll(req.query);
+	const jobs = await JobsModel.getAll(c.req.query());
 
 	const data: JobsResponse = {
 		total: jobs.length,
@@ -19,40 +20,43 @@ JobsRouter.get("/", async (req, res) => {
 		data: jobs,
 	};
 
-	res.json(data);
+	return c.json(data);
 });
 
 // create
-JobsRouter.post("/", async (req, res) => {
-	const item = await JobsModel.create(req.body);
-	res.json(item);
+app.post("/", async (c) => {
+	const body = await c.req.json();
+	const item = await JobsModel.create(body);
+	return c.json(item);
 });
 
 // getById
-JobsRouter.get("/:id", async (req, res) => {
-	const { id } = req.params;
+app.get("/:id", async (c) => {
+	const { id } = c.req.param();
 	const item = await JobsModel.getById(id);
-	sendJson(res, item);
+	sendJson(c, item);
 });
 
 // update
-JobsRouter.put("/:id", async (req, res) => {
-	const { id } = req.params;
-	const item = await JobsModel.update(id, req.body);
-	sendJson(res, item);
+app.put("/:id", async (c) => {
+	const { id } = c.req.param();
+
+	const body = await c.req.json();
+	const item = await JobsModel.update(id, body);
+	sendJson(c, item);
 });
 
 // delete
-JobsRouter.delete("/:id", async (req, res) => {
-	const { id } = req.params;
+app.delete("/:id", async (c) => {
+	const { id } = c.req.param();
 	const item = await JobsModel.delete(id);
-	sendJson(res, item);
+	sendJson(c, item);
 });
 
-function sendJson(res: Response, item: object | null) {
+function sendJson(c: Context, item: object | null) {
 	if (item) {
-		return res.json(item);
+		return c.json(item);
 	} else {
-		return res.status(404).json({ error: "Job not found" });
+		return c.json({ error: "Job not found" }, 404);
 	}
 }

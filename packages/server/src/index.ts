@@ -1,13 +1,22 @@
-import express from "express";
-import { DEFAULTS } from "./config.ts";
-import { JobsRouter } from "./jobs/index.ts";
-import { corsMiddleware } from "./middlewares/cors.ts";
+import { serve } from "@hono/node-server";
+import { Hono } from "hono";
+import { DEFAULTS } from "./config.js";
+import { cors } from "hono/cors";
+import JobsRouter from "./jobs/index.js";
+import { logger } from "hono/logger";
 
-const PORT = process.env.PORT ?? DEFAULTS.PORT;
-const app = express();
+const app = new Hono();
+export type AppType = typeof app;
 
-app.use(corsMiddleware(), express.json());
+app.use(cors({ origin: DEFAULTS.ALLOWED_ORIGINS }), logger());
+app.route("/api/jobs", JobsRouter);
 
-app.use("/api/jobs", JobsRouter);
-
-app.listen(PORT, () => console.log(`Serving: https://localhost:${PORT}`));
+serve(
+	{
+		fetch: app.fetch,
+		port: Number(process.env.PORT) ?? DEFAULTS.PORT,
+	},
+	(info) => {
+		console.log(`Server is running on http://localhost:${info.port}`);
+	},
+);
