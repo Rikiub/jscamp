@@ -3,5 +3,8 @@
 	"private": true,
 	"scripts": {
 		"dev": "pnpm -r --parallel dev"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.3.12"
 	}
 }
