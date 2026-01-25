@@ -2,7 +2,9 @@
 	"name": "project-monorepo",
 	"private": true,
 	"scripts": {
-		"dev": "pnpm -r --parallel dev"
+		"lint": "pnpm -r exec biome check .",
+		"format": "pnpm -r exec biome format --write .",
+		"lint:fix": "pnpm -r exec biome check --apply ."
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.3.12"
