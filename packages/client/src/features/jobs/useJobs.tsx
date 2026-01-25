@@ -1,24 +1,9 @@
+import type { FullJob, JobsFilter, JobsResponse } from "@project/server";
 import { useEffect, useState } from "react";
-import type { FullJob, JobsResponse } from "./types";
-import {
-	convertRawJob,
-	convertRawJobsAll,
-	type RawJob,
-	type RawJobsResponse,
-} from "./utils/mapper";
 
-const API_ENDPOINT = "https://jscamp-api.vercel.app/api/jobs";
+const API_ENDPOINT = "http://localhost:3000/api/jobs";
 
-export interface Filters {
-	search?: string;
-	technology?: string;
-	location?: string;
-	level?: string;
-	limit?: number;
-	offset?: number;
-}
-
-export function useJobsAll(filters: Filters = {}) {
+export function useJobsAll(filters: JobsFilter = {}) {
 	const [jobs, setJobs] = useState<JobsResponse | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
@@ -26,12 +11,12 @@ export function useJobsAll(filters: Filters = {}) {
 	useEffect(() => {
 		const params = new URLSearchParams();
 
-		if (filters.search) params.append("text", filters.search);
+		if (filters.search) params.append("search", filters.search);
 		if (filters.technology) {
 			params.append("technology", filters.technology);
 		}
 		if (filters.location) {
-			params.append("type", filters.location);
+			params.append("location", filters.location);
 		}
 		if (filters.level) {
 			params.append("level", filters.level);
@@ -47,13 +32,11 @@ export function useJobsAll(filters: Filters = {}) {
 			try {
 				setLoading(true);
 
-				const res = await fetch(`${API_ENDPOINT}/?${params.toString()}`);
+				const res = await fetch(`${API_ENDPOINT}?${params.toString()}`);
 				if (!res.ok) throw new Error();
 
-				const json: RawJobsResponse = await res.json();
-				const data = convertRawJobsAll(json);
-
-				setJobs(data);
+				const json: JobsResponse = await res.json();
+				setJobs(json);
 			} catch (error) {
 				if (error instanceof Error) setError(error.message);
 			} finally {
@@ -77,12 +60,8 @@ export function useJobsAll(filters: Filters = {}) {
 	};
 }
 
-export async function getJob(id: string) {
+export async function getJob(id: string): Promise<FullJob> {
 	const res = await fetch(`${API_ENDPOINT}/${id}`);
 	if (!res.ok) throw new Error();
-
-	const json: RawJob = await res.json();
-	const data = convertRawJob(json);
-
-	return data as FullJob;
+	return await res.json();
 }

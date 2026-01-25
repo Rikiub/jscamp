@@ -1,10 +1,11 @@
+import type { JobsFilter } from "@project/server";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
 import { Button } from "@/components/ui/Button";
 import { Pagination } from "@/components/ui/Pagination";
 import { SearchInput } from "@/components/ui/SearchInput";
 import { Select } from "@/components/ui/Select";
-import { type Filters, useJobsAll } from "@/features/jobs/useJobs";
+import { useJobsAll } from "@/features/jobs/useJobs";
 import { useTags } from "@/features/jobs/useTags";
 import { JobList } from "./components/JobList";
 import styles from "./styles.module.css";
@@ -22,7 +23,7 @@ export default function Empleos() {
 
 	// Filters
 	const [filterActive, setFilterActive] = useState(false);
-	const [filters, setFilters] = useState<Filters>({
+	const [filters, setFilters] = useState<JobsFilter>({
 		search: params.get("search") ?? "",
 		technology: params.get("technology") ?? "",
 		location: params.get("location") ?? "",
@@ -35,7 +36,7 @@ export default function Empleos() {
 		setFilters({ ...filters, offset: (value - 1) * RESULTS_PER_PAGE });
 	}
 
-	function setFilter<K extends keyof Filters>(key: K, value: Filters[K]) {
+	function setFilter<K extends keyof JobsFilter>(key: K, value: JobsFilter[K]) {
 		setPage(1);
 		setFilters((prev) => ({
 			...prev,

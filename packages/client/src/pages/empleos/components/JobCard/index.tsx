@@ -1,7 +1,7 @@
+import type { Job } from "@project/server";
 import { Button } from "@/components/ui/Button";
 import { FavoriteIcon } from "@/components/ui/FavoriteIcon";
 import { Link } from "@/components/ui/Link";
-import type { Job } from "@/features/jobs/types";
 import { useAuthStore } from "@/store/authStore";
 import { useFavoritesStore } from "../../store/favorites";
 import styles from "./styles.module.css";

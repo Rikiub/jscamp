@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-type JobId = number;
+type JobId = string;
 
 export interface FavoritesStoreType {
 	favorites: JobId[];

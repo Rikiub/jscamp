@@ -1,5 +1,5 @@
+import type { Job } from "@project/server";
 import { Spinner } from "@/components/ui/Spinner";
-import type { Job } from "@/features/jobs/types";
 import { JobCard } from "@/pages/empleos/components/JobCard";
 import styles from "./styles.module.css";
 

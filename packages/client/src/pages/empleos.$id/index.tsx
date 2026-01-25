@@ -1,9 +1,9 @@
+import type { FullJob } from "@project/server";
 import { type LoaderFunctionArgs, useLoaderData } from "react-router";
 import snarkdown from "snarkdown";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { Button } from "@/components/ui/Button";
 import { FavoriteIcon } from "@/components/ui/FavoriteIcon";
-import type { FullJob } from "@/features/jobs/types";
 import { getJob } from "@/features/jobs/useJobs";
 import { useAuthStore } from "@/store/authStore";
 import { useFavoritesStore } from "../empleos/store/favorites";
