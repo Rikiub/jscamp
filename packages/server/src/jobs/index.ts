@@ -1,9 +1,9 @@
+import { sValidator } from "@hono/standard-validator";
+import { type Context, Hono } from "hono";
 import { DEFAULTS } from "#/config.js";
 import { JobsModel } from "./model.js";
-import type { JobsResponse } from "./types.js";
-import { type Context, Hono } from "hono";
-import { sValidator } from "@hono/standard-validator";
 import { JobsFilterSchema } from "./schemas.js";
+import type { JobsResponse } from "./types.js";
 
 const app = new Hono()
 	// getAll

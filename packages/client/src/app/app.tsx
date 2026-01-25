@@ -7,6 +7,4 @@ import "./styles/theme.css";
 
 const root = document.getElementById("root");
 if (root)
-	createRoot(root).render(
-		<RouterProvider router={router}></RouterProvider>,
-	);
+	createRoot(root).render(<RouterProvider router={router}></RouterProvider>);

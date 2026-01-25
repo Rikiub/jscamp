@@ -1,9 +1,9 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
-import { DEFAULTS } from "./config.js";
 import { cors } from "hono/cors";
-import JobsRouter from "./jobs/index.js";
 import { logger } from "hono/logger";
+import { DEFAULTS } from "./config.js";
+import JobsRouter from "./jobs/index.js";
 
 const app = new Hono()
 	.use(cors({ origin: DEFAULTS.ALLOWED_ORIGINS }), logger())

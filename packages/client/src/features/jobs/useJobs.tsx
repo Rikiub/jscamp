@@ -1,5 +1,5 @@
-import type { FullJob, JobsFilter, JobsResponse } from "@project/server/jobs";
 import { getClient } from "@project/server/client";
+import type { FullJob, JobsFilter, JobsResponse } from "@project/server/jobs";
 import { useEffect, useState } from "react";
 
 export function useJobsAll(filters: JobsFilter = {}) {
@@ -7,6 +7,7 @@ export function useJobsAll(filters: JobsFilter = {}) {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <i don't need add the whole filters>
 	useEffect(() => {
 		async function fetchJobs() {
 			try {
@@ -41,7 +42,7 @@ export function useJobsAll(filters: JobsFilter = {}) {
 }
 
 export async function getJob(id: string): Promise<FullJob> {
-	const res = await getClient().api.jobs[':id'].$get({param: {id: id}});
+	const res = await getClient().api.jobs[":id"].$get({ param: { id: id } });
 	if (!res.ok) throw new Error();
 	return await res.json();
 }

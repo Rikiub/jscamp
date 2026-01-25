@@ -40,17 +40,17 @@ export const JobsModel = {
 		}
 		if (technology) {
 			filteredJobs = filteredJobs.filter((job) =>
-				job.tags.technology.includes(technology)
+				job.tags.technology.includes(technology),
 			);
 		}
 		if (location) {
 			filteredJobs = filteredJobs.filter((job) =>
-				job.tags.location.includes(location)
+				job.tags.location.includes(location),
 			);
 		}
 		if (level) {
 			filteredJobs = filteredJobs.filter((job) =>
-				job.tags.level.includes(level)
+				job.tags.level.includes(level),
 			);
 		}
 

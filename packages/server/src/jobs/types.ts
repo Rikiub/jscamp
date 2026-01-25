@@ -1,5 +1,5 @@
-import * as v from "valibot";
-import * as s from "./schemas.js";
+import type * as v from "valibot";
+import type * as s from "./schemas.js";
 
 export type Content = v.InferOutput<typeof s.ContentSchema>;
 export type Tags = v.InferOutput<typeof s.TagsSchema>;
