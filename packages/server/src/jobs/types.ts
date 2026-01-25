@@ -1,46 +1,10 @@
-export interface Content {
-	description: string;
-	responsibilities: string;
-	requirements: string;
-	about: string;
-}
+import * as v from "valibot";
+import * as s from "./schemas.js";
 
-export interface Tags {
-	technology: string[];
-	location: string;
-	level: string;
-}
-
-export interface Job {
-	id: string;
-	title: string;
-	company: string;
-	location: string;
-	description: string;
-	tags: Tags;
-}
-
-export interface FullJob extends Job {
-	content: Content;
-}
-
-export interface JobsFilter {
-	search?: string;
-
-	technology?: string;
-	location?: string;
-	level?: string;
-
-	limit?: number;
-	offset?: number;
-}
-
-export interface JobsResponse {
-	total: number;
-	limit: number;
-	offset: number;
-	results: number;
-	data: Job[];
-}
-
-export type CreateJob = Omit<FullJob, "id">;
+export type Content = v.InferOutput<typeof s.ContentSchema>;
+export type Tags = v.InferOutput<typeof s.TagsSchema>;
+export type Job = v.InferOutput<typeof s.JobSchema>;
+export type FullJob = v.InferOutput<typeof s.FullJobSchema>;
+export type JobsFilter = v.InferOutput<typeof s.JobsFilterSchema>;
+export type JobsResponse = v.InferOutput<typeof s.JobsResponseSchema>;
+export type CreateJob = v.InferOutput<typeof s.CreateJobSchema>;

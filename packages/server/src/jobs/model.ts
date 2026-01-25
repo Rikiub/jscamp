@@ -1,5 +1,5 @@
-import { DEFAULTS } from "../config.ts";
-import type { CreateJob, FullJob, Job, JobsFilter } from "./types.ts";
+import { DEFAULTS } from "#/config.js";
+import type { CreateJob, FullJob, Job, JobsFilter } from "./types.js";
 
 const _data = await import("./jobs.json", { with: { type: "json" } });
 let jobs = _data.default as FullJob[];
@@ -40,17 +40,17 @@ export const JobsModel = {
 		}
 		if (technology) {
 			filteredJobs = filteredJobs.filter((job) =>
-				job.tags.technology.includes(technology),
+				job.tags.technology.includes(technology)
 			);
 		}
 		if (location) {
 			filteredJobs = filteredJobs.filter((job) =>
-				job.tags.location.includes(location),
+				job.tags.location.includes(location)
 			);
 		}
 		if (level) {
 			filteredJobs = filteredJobs.filter((job) =>
-				job.tags.level.includes(level),
+				job.tags.level.includes(level)
 			);
 		}
 

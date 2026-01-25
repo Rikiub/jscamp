@@ -1,7 +1,6 @@
-import type { FullJob, JobsFilter, JobsResponse } from "@project/server";
+import type { FullJob, JobsFilter, JobsResponse } from "@project/server/jobs";
+import { getClient } from "@project/server/client";
 import { useEffect, useState } from "react";
-
-const API_ENDPOINT = "http://localhost:3000/api/jobs";
 
 export function useJobsAll(filters: JobsFilter = {}) {
 	const [jobs, setJobs] = useState<JobsResponse | null>(null);
@@ -9,33 +8,14 @@ export function useJobsAll(filters: JobsFilter = {}) {
 	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
-		const params = new URLSearchParams();
-
-		if (filters.search) params.append("search", filters.search);
-		if (filters.technology) {
-			params.append("technology", filters.technology);
-		}
-		if (filters.location) {
-			params.append("location", filters.location);
-		}
-		if (filters.level) {
-			params.append("level", filters.level);
-		}
-		if (filters.limit) {
-			params.append("limit", filters.limit.toString() ?? "9000");
-		}
-		if (filters.offset) {
-			params.append("offset", filters.offset.toString());
-		}
-
 		async function fetchJobs() {
 			try {
 				setLoading(true);
 
-				const res = await fetch(`${API_ENDPOINT}?${params.toString()}`);
-				if (!res.ok) throw new Error();
+				const res = await getClient().api.jobs.$get({ query: filters });
+				if (!res.ok) return Error();
 
-				const json: JobsResponse = await res.json();
+				const json = await res.json();
 				setJobs(json);
 			} catch (error) {
 				if (error instanceof Error) setError(error.message);
@@ -61,7 +41,7 @@ export function useJobsAll(filters: JobsFilter = {}) {
 }
 
 export async function getJob(id: string): Promise<FullJob> {
-	const res = await fetch(`${API_ENDPOINT}/${id}`);
+	const res = await getClient().api.jobs[':id'].$get({param: {id: id}});
 	if (!res.ok) throw new Error();
 	return await res.json();
 }

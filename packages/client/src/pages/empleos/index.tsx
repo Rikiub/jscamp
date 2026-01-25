@@ -1,4 +1,4 @@
-import type { JobsFilter } from "@project/server";
+import type { JobsFilter } from "@project/server/jobs";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
 import { Button } from "@/components/ui/Button";

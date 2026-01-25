@@ -1,4 +1,4 @@
-import type { FullJob } from "@project/server";
+import type { FullJob } from "@project/server/jobs";
 import { type LoaderFunctionArgs, useLoaderData } from "react-router";
 import snarkdown from "snarkdown";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";

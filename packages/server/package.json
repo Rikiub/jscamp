@@ -1,7 +1,13 @@
 {
   "name": "@project/server",
   "type": "module",
-  "types": "./types.ts",
+  "imports": {
+    "#/*": "./src/*"
+  },
+  "exports": {
+    "./client": "./src/client.ts",
+    "./jobs": "./src/jobs/types.ts"
+  },
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
@@ -9,7 +15,9 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.19.9",
-    "hono": "^4.11.5"
+    "@hono/standard-validator": "^0.2.2",
+    "hono": "^4.11.5",
+    "valibot": "^1.2.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.12",
