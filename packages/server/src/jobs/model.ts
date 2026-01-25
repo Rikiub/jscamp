@@ -15,46 +15,40 @@ export const JobsModel = {
 	}: JobsFilter = {}): Promise<Job[]> {
 		let filteredJobs = jobs;
 
-		const sanitizedSearch = search?.toLowerCase() || "";
-		const matchSearch = (term: string | string[]) => {
-			if (typeof term === "string") {
-				term = [term.toLowerCase()];
-			} else {
-				term = term.map((value) => value.toLowerCase());
-			}
-
-			return term.includes(sanitizedSearch);
-		};
-
 		if (search) {
-			filteredJobs = filteredJobs.filter(
-				(job) =>
-					matchSearch(job.title) ||
-					matchSearch(job.description) ||
-					matchSearch(job.company) ||
-					matchSearch(job.location) ||
-					matchSearch(job.tags.technology) ||
-					matchSearch(job.tags.location) ||
-					matchSearch(job.tags.level),
-			);
+			const query = search?.toLowerCase() || "";
+
+			filteredJobs = filteredJobs.filter((job) => {
+				const fields = [
+					job.title,
+					job.description,
+					job.company,
+					job.location,
+					...Object.values(job.tags),
+				];
+
+				return fields.flat().some((val) =>
+					val?.toLowerCase().includes(query)
+				);
+			});
 		}
 		if (technology) {
 			filteredJobs = filteredJobs.filter((job) =>
-				job.tags.technology.includes(technology),
+				job.tags.technology.includes(technology)
 			);
 		}
 		if (location) {
 			filteredJobs = filteredJobs.filter((job) =>
-				job.tags.location.includes(location),
+				job.tags.location.includes(location)
 			);
 		}
 		if (level) {
 			filteredJobs = filteredJobs.filter((job) =>
-				job.tags.level.includes(level),
+				job.tags.level.includes(level)
 			);
 		}
 
-		filteredJobs = jobs.slice(offset, offset + limit);
+		filteredJobs = filteredJobs.slice(offset, offset + limit);
 		return filteredJobs as Job[];
 	},
 
