@@ -2,7 +2,11 @@ import { sValidator } from "@hono/standard-validator";
 import { type Context, Hono } from "hono";
 import { DEFAULTS } from "#/config.js";
 import { JobsModel } from "./model.js";
-import { CreateJobSchema, JobsParamsSchema } from "./schemas.js";
+import {
+	CreateJobSchema,
+	JobsParamsSchema,
+	PartialJobSchema,
+} from "./schemas.js";
 import type { JobsResponse } from "./types.js";
 
 const app = new Hono()
@@ -22,12 +26,6 @@ const app = new Hono()
 
 		return c.json(data);
 	})
-	// create
-	.post("/", sValidator("json", CreateJobSchema), async (c) => {
-		const json = c.req.valid("json");
-		const item = await JobsModel.create(json);
-		return c.json(item);
-	})
 	// getById
 	.get("/:id", async (c) => {
 		const { id } = c.req.param();
@@ -36,12 +34,28 @@ const app = new Hono()
 		if (!item) return sendNotFound(c);
 		return c.json(item);
 	})
+	// create
+	.post("/", sValidator("json", CreateJobSchema), async (c) => {
+		const json = c.req.valid("json");
+		const item = await JobsModel.create(json);
+		return c.json(item);
+	})
 	// update
-	.put("/:id", async (c) => {
+	.put("/:id", sValidator("json", CreateJobSchema), async (c) => {
 		const { id } = c.req.param();
+		const json = c.req.valid("json");
 
-		const body = await c.req.json();
-		const item = await JobsModel.update(id, body);
+		const item = await JobsModel.update(id, json);
+
+		if (!item) return sendNotFound(c);
+		return c.body(null, 204);
+	})
+	// partial update
+	.patch("/:id", sValidator("json", PartialJobSchema), async (c) => {
+		const { id } = c.req.param();
+		const json = c.req.valid("json");
+
+		const item = await JobsModel.partialUpdate(id, json);
 
 		if (!item) return sendNotFound(c);
 		return c.body(null, 204);
