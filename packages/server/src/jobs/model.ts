@@ -27,24 +27,22 @@ export const JobsModel = {
 					...Object.values(job.tags),
 				];
 
-				return fields.flat().some((val) =>
-					val?.toLowerCase().includes(query)
-				);
+				return fields.flat().some((val) => val?.toLowerCase().includes(query));
 			});
 		}
 		if (technology) {
 			filteredJobs = filteredJobs.filter((job) =>
-				job.tags.technology.includes(technology)
+				job.tags.technology.includes(technology),
 			);
 		}
 		if (location) {
 			filteredJobs = filteredJobs.filter((job) =>
-				job.tags.location.includes(location)
+				job.tags.location.includes(location),
 			);
 		}
 		if (level) {
 			filteredJobs = filteredJobs.filter((job) =>
-				job.tags.level.includes(level)
+				job.tags.level.includes(level),
 			);
 		}
 
