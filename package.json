@@ -8,6 +8,7 @@
 		"lint:fix": "pnpm -r exec biome check --write ."
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.3.12"
+		"@biomejs/biome": "^2.3.12",
+		"typescript": "^5.9.3"
 	}
 }
