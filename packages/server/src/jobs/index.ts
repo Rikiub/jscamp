@@ -2,7 +2,7 @@ import { sValidator } from "@hono/standard-validator";
 import { type Context, Hono } from "hono";
 import { DEFAULTS } from "#/config.js";
 import { JobsModel } from "./model.js";
-import { JobsParamsSchema } from "./schemas.js";
+import { CreateJobSchema, JobsParamsSchema } from "./schemas.js";
 import type { JobsResponse } from "./types.js";
 
 const app = new Hono()
@@ -23,9 +23,9 @@ const app = new Hono()
 		return c.json(data);
 	})
 	// create
-	.post("/", async (c) => {
-		const body = await c.req.json();
-		const item = await JobsModel.create(body);
+	.post("/", sValidator("json", CreateJobSchema), async (c) => {
+		const json = c.req.valid("json");
+		const item = await JobsModel.create(json);
 		return c.json(item);
 	})
 	// getById
@@ -33,7 +33,8 @@ const app = new Hono()
 		const { id } = c.req.param();
 		const item = await JobsModel.getById(id);
 
-		return sendJson(c, item);
+		if (!item) return sendNotFound(c);
+		return c.json(item);
 	})
 	// update
 	.put("/:id", async (c) => {
@@ -42,19 +43,20 @@ const app = new Hono()
 		const body = await c.req.json();
 		const item = await JobsModel.update(id, body);
 
-		return sendJson(c, item);
+		if (!item) return sendNotFound(c);
+		return c.body(null, 204);
 	})
 	// delete
 	.delete("/:id", async (c) => {
 		const { id } = c.req.param();
 		const item = await JobsModel.delete(id);
 
-		return sendJson(c, item);
+		if (!item) return sendNotFound(c);
+		return c.body(null, 204);
 	});
 
 export default app;
 
-function sendJson<T>(c: Context, item: T | null) {
-	if (!item) return c.json({ error: "Job not found" }, 404);
-	return c.json(item);
+function sendNotFound(c: Context) {
+	return c.json({ error: "Job not found" }, 404);
 }
