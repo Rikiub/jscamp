@@ -1,5 +1,5 @@
 import { DEFAULTS } from "#/config.js";
-import type { CreateJob, FullJob, Job, JobsFilter } from "./types.js";
+import type { CreateJob, FullJob, Job, JobsParams } from "./types.js";
 
 const _data = await import("./jobs.json", { with: { type: "json" } });
 let jobs = _data.default as FullJob[];
@@ -12,7 +12,7 @@ export const JobsModel = {
 		level,
 		limit = DEFAULTS.LIMIT_PAGINATION,
 		offset = DEFAULTS.LIMIT_OFFSET,
-	}: JobsFilter = {}): Promise<Job[]> {
+	}: JobsParams = {}): Promise<Job[]> {
 		let filteredJobs = jobs;
 
 		if (search) {

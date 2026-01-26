@@ -35,7 +35,7 @@ export const CreateJobSchema = v.omit(FullJobSchema, ["id"]);
 // Response
 const queryNumber = v.pipe(v.any(), v.transform(Number), v.number());
 
-export const JobsFilterSchema = v.optional(
+export const JobsParamsSchema = v.optional(
 	v.partial(
 		v.object({
 			search: v.string(),

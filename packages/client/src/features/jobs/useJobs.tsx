@@ -1,8 +1,8 @@
 import { getClient } from "@project/server/client";
-import type { FullJob, JobsFilter, JobsResponse } from "@project/server/jobs";
+import type { FullJob, JobsParams, JobsResponse } from "@project/server/jobs";
 import { useEffect, useState } from "react";
 
-export function useJobsAll(filters: JobsFilter = {}) {
+export function useJobsAll(filters: JobsParams = {}) {
 	const [jobs, setJobs] = useState<JobsResponse | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);

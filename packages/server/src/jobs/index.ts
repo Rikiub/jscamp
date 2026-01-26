@@ -2,12 +2,12 @@ import { sValidator } from "@hono/standard-validator";
 import { type Context, Hono } from "hono";
 import { DEFAULTS } from "#/config.js";
 import { JobsModel } from "./model.js";
-import { JobsFilterSchema } from "./schemas.js";
+import { JobsParamsSchema } from "./schemas.js";
 import type { JobsResponse } from "./types.js";
 
 const app = new Hono()
 	// getAll
-	.get("/", sValidator("query", JobsFilterSchema), async (c) => {
+	.get("/", sValidator("query", JobsParamsSchema), async (c) => {
 		const query = c.req.valid("query") ?? {};
 		const { limit, offset } = query;
 		const jobs = await JobsModel.getAll(query);

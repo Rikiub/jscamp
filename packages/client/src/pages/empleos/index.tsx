@@ -1,4 +1,4 @@
-import type { JobsFilter } from "@project/server/jobs";
+import type { JobsParams } from "@project/server/jobs";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
 import { Button } from "@/components/ui/Button";
@@ -10,65 +10,67 @@ import { useTags } from "@/features/jobs/useTags";
 import { JobList } from "./components/JobList";
 import styles from "./styles.module.css";
 
-interface UrlParams {
-	page?: string;
-	search?: string;
-	technology?: string;
-	location?: string;
-}
+type _Params = {
+	page?: number;
+} & JobsParams;
+type SearchParams = Omit<_Params, "limit" | "offset">;
 
 export default function Empleos() {
-	const RESULTS_PER_PAGE = 10;
-	const [params, setSearchParams] = useSearchParams();
+	const RESULTS_PER_PAGE = 5;
+	const [searchParams, setSearchParams] = useSearchParams();
+
+	const handleParamsChange = (newValues: SearchParams) => {
+		setSearchParams((prev) => {
+			const merged = { ...Object.fromEntries(prev), ...newValues };
+
+			return Object.fromEntries(
+				Object.entries(merged).filter(([_, v]) => v != null && v !== ""),
+			) as Record<string, string>;
+		});
+	};
 
 	// Filters
-	const [filterActive, setFilterActive] = useState(false);
-	const [filters, setFilters] = useState<JobsFilter>({
-		search: params.get("search") ?? "",
-		technology: params.get("technology") ?? "",
-		location: params.get("location") ?? "",
-		limit: RESULTS_PER_PAGE,
-	});
+	const paramsFilters: SearchParams = {
+		page: Number(searchParams.get("page") ?? 1),
+		search: searchParams.get("search") ?? "",
+		technology: searchParams.get("technology") ?? "",
+		location: searchParams.get("location") ?? "",
+	};
+	const [requestFilters, setRequestFilters] = useState<JobsParams>();
 
-	const [page, _setPage] = useState(Number(params.get("page") ?? 1));
-	function setPage(value: number) {
-		_setPage(value);
-		setFilters({ ...filters, offset: (value - 1) * RESULTS_PER_PAGE });
-	}
+	// Sync offset with page
+	useEffect(() => {
+		const page = paramsFilters.page || 1;
 
-	function setFilter<K extends keyof JobsFilter>(key: K, value: JobsFilter[K]) {
-		setPage(1);
-		setFilters((prev) => ({
-			...prev,
-			[key]: value,
-		}));
-		setFilterActive(true);
-	}
+		setRequestFilters({
+			limit: RESULTS_PER_PAGE,
+			offset: (page - 1) * RESULTS_PER_PAGE,
+		});
+	}, [paramsFilters.page]);
+
+	// Set initial page
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <unnecesary>
+	useEffect(() => handleParamsChange({ page: paramsFilters.page }), []);
+
+	// Is Filters Active?
 	function resetFilters() {
-		setPage(1);
-		setFilters({
+		handleParamsChange({
+			page: 1,
 			search: "",
 			technology: "",
 			location: "",
-			limit: RESULTS_PER_PAGE,
 		});
-		setFilterActive(false);
 	}
 
-	// Save State
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <unnecesary>
-	useEffect(() => {
-		const params: UrlParams = {
-			page: page.toString(),
-			search: filters.search ?? "",
-			technology: filters.technology ?? "",
-			location: filters.location ?? "",
-		};
-		setSearchParams({ ...params });
-	}, [page, filters.search, filters.technology, filters.location]);
+	const filterActive = !!(
+		paramsFilters.search ||
+		paramsFilters.technology ||
+		paramsFilters.location ||
+		paramsFilters.level
+	);
 
 	// Filtered Jobs
-	const { jobs, loading } = useJobsAll(filters);
+	const { jobs, loading } = useJobsAll({ ...paramsFilters, ...requestFilters });
 	const [tags] = useTags();
 
 	const totalPages = useMemo(() => {
@@ -89,16 +91,16 @@ export default function Empleos() {
 				<form onSubmit={(e) => e.preventDefault()}>
 					<SearchInput
 						placeholder="Buscar trabajos, empresas o habilidades"
-						defaultValue={filters.search}
-						onSearch={(v) => setFilter("search", v)}
+						defaultValue={paramsFilters.search}
+						onSearch={(v) => handleParamsChange({ search: v })}
 						debounce={300}
 					/>
 
 					<div className={styles.filters}>
 						<Select
 							placeholder="Tecnologia"
-							value={filters.technology}
-							onChange={(v) => setFilter("technology", v)}
+							value={paramsFilters.technology}
+							onChange={(v) => handleParamsChange({ technology: v })}
 						>
 							{tags?.technology.map((value) => (
 								<option key={value}>{value}</option>
@@ -107,8 +109,8 @@ export default function Empleos() {
 
 						<Select
 							placeholder="Ubicación"
-							value={filters.location}
-							onChange={(v) => setFilter("location", v)}
+							value={paramsFilters.location}
+							onChange={(v) => handleParamsChange({ location: v })}
 						>
 							{tags?.location.map((value) => (
 								<option key={value}>{value}</option>
@@ -131,9 +133,9 @@ export default function Empleos() {
 					<JobList jobs={jobs?.data} loading={loading} />
 
 					<Pagination
-						current={page}
+						current={paramsFilters.page ?? 1}
 						total={totalPages}
-						onChange={(page) => setPage(page)}
+						onChange={(page) => handleParamsChange({ page: page })}
 					/>
 				</main>
 			</section>
