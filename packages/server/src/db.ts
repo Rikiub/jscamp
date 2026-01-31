@@ -1,4 +1,5 @@
 import { drizzle } from "drizzle-orm/libsql";
 import * as schema from "#/schemas/tables";
+import { env } from "./env";
 
-export const db = drizzle(process.env.DB_FILE_NAME!, { schema });
+export const db = drizzle(env.DB_FILE_NAME, { schema });
