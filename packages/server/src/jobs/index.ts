@@ -55,7 +55,7 @@ const app = new Hono()
 		const { id } = c.req.param();
 		const json = c.req.valid("json");
 
-		const item = await JobsModel.partialUpdate(id, json);
+		const item = await JobsModel.update(id, json);
 
 		if (!item) return sendNotFound(c);
 		return c.body(null, 204);

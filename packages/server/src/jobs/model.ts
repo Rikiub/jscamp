@@ -1,14 +1,17 @@
+import { and, eq, exists, inArray, like, or } from "drizzle-orm";
 import { DEFAULTS } from "#/config.js";
+import { db } from "#/db/index.js";
 import type {
-	CreateJob,
 	FullJob,
 	Job,
-	JobsParams,
-	PartialJob,
-} from "./types.js";
+	NewJob,
+	Technology,
+	UpdateJob,
+} from "#/db/schemas/jobs.js";
+import * as schema from "#/db/schemas/jobs.js";
+import type { JobsParams } from "./types.js";
 
-const _data = await import("./jobs.json", { with: { type: "json" } });
-let jobs = _data.default as FullJob[];
+export type Transaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
 export const JobsModel = {
 	async getAll({
@@ -19,91 +22,139 @@ export const JobsModel = {
 		limit = DEFAULTS.LIMIT_PAGINATION,
 		offset = DEFAULTS.LIMIT_OFFSET,
 	}: JobsParams = {}): Promise<Job[]> {
-		let filteredJobs = jobs;
+		const filters = [];
 
 		if (search) {
-			const query = search?.toLowerCase() || "";
+			const query = `%${search}%`;
 
-			filteredJobs = filteredJobs.filter((job) => {
-				const fields = [
-					job.title,
-					job.description,
-					job.company,
-					job.location,
-					...Object.values(job.tags),
-				];
-
-				return fields.flat().some((val) =>
-					val?.toLowerCase().includes(query)
-				);
-			});
+			filters.push(
+				or(
+					like(schema.jobs.title, query),
+					like(schema.jobs.company, query),
+					exists(
+						db
+							.select()
+							.from(schema.contents)
+							.where(
+								and(
+									eq(schema.contents.jobId, schema.jobs.id),
+									like(schema.contents.description, query),
+								),
+							),
+					),
+				),
+			);
 		}
+
+		if (location) filters.push(eq(schema.jobs.location, location));
+		if (level) filters.push(eq(schema.jobs.level, level));
+
 		if (technology) {
-			filteredJobs = filteredJobs.filter((job) =>
-				job.tags.technology.includes(technology)
-			);
-		}
-		if (location) {
-			filteredJobs = filteredJobs.filter((job) =>
-				job.tags.location.includes(location)
-			);
-		}
-		if (level) {
-			filteredJobs = filteredJobs.filter((job) =>
-				job.tags.level.includes(level)
+			filters.push(
+				exists(
+					db
+						.select()
+						.from(schema.jobTechnologies)
+						.innerJoin(
+							schema.technologies,
+							eq(schema.jobTechnologies.techId, schema.technologies.id),
+						)
+						.where(
+							and(
+								eq(schema.jobTechnologies.jobId, schema.jobs.id),
+								eq(schema.technologies.name, technology),
+							),
+						),
+				),
 			);
 		}
 
-		filteredJobs = filteredJobs.slice(offset, offset + limit);
-		return filteredJobs as Job[];
+		const results = await db.query.jobs.findMany({
+			where: and(...filters),
+			limit,
+			offset,
+			with: { content: true, technologies: true },
+		});
+		return results;
 	},
 
-	async getById(id: string): Promise<FullJob | null> {
-		const item = jobs.filter((value) => value.id === id)[0];
+	async getById(jobId: string, tx?: Transaction): Promise<FullJob | null> {
+		const handler = tx ?? db;
+
+		const item = await handler.query.jobs.findFirst({
+			where: (table, { eq }) => eq(table.id, jobId),
+			with: { content: true, technologies: true },
+		});
+
+		if (!item) return null;
 		return item;
 	},
 
-	async create(data: CreateJob): Promise<FullJob> {
-		const item = { ...data, id: crypto.randomUUID() };
-		jobs.push(item);
-		return item;
+	async create(data: NewJob): Promise<FullJob> {
+		const { content, technologies, ...job } = data;
+
+		const result = await db.transaction(async (tx) => {
+			const [jobItem] = await tx
+				.insert(schema.jobs)
+				.values(job)
+				.returning({ id: schema.jobs.id });
+			await tx
+				.insert(schema.contents)
+				.values({ ...content, jobId: jobItem.id });
+
+			await JobsModel.syncJobTechnologies(tx, jobItem.id, technologies);
+			return JobsModel.getById(jobItem.id, tx);
+		});
+		return result as FullJob;
 	},
 
-	async update(id: string, data: CreateJob): Promise<FullJob | null> {
-		const index = jobs.findIndex((item) => item.id === id);
+	async update(jobId: string, data: UpdateJob) {
+		const { technologies, content, ...jobsData } = data;
 
-		if (index !== -1) {
-			const item: FullJob = { id, ...data };
-			jobs[index] = item;
-			return item;
-		}
+		return await db.transaction(async (tx) => {
+			await tx
+				.update(schema.jobs)
+				.set(jobsData)
+				.where(eq(schema.jobs.id, jobId));
 
-		return null;
+			if (content) {
+				await tx
+					.update(schema.contents)
+					.set(content)
+					.where(eq(schema.contents.jobId, jobId));
+			}
+
+			await JobsModel.syncJobTechnologies(tx, jobId, technologies);
+		});
 	},
 
-	async partialUpdate(
-		id: string,
-		data: PartialJob,
-	): Promise<FullJob | null> {
-		const index = jobs.findIndex((item) => item.id === id);
-
-		if (index !== -1) {
-			const item = { ...jobs[index], ...data };
-			jobs = [...jobs.slice(0, index), item, ...jobs.slice(index + 1)];
-			return item;
-		}
-
-		return null;
+	async delete(jobId: string) {
+		db.delete(schema.jobs).where(eq(schema.jobs.id, jobId));
 	},
 
-	async delete(id: string): Promise<FullJob | null> {
-		const item = await JobsModel.getById(id);
+	async getTags(): Promise<Technology[]> {
+		return await db.select().from(schema.technologies);
+	},
 
-		if (item) {
-			jobs = jobs.filter((job) => job.id !== item.id);
-			return item;
-		}
+	async syncJobTechnologies(
+		tx: Transaction,
+		jobId: string,
+		technologies: string[] = [],
+	) {
+		await tx
+			.delete(schema.jobTechnologies)
+			.where(eq(schema.jobTechnologies.jobId, jobId));
 
-		return null;
+		const techIds = await tx
+			.select({ id: schema.technologies.id })
+			.from(schema.technologies)
+			.where(inArray(schema.technologies.name, technologies));
+
+		await tx.insert(schema.jobTechnologies).values(
+			techIds.map((t) => ({
+				jobId,
+				techId: t.id,
+			})),
+		);
 	},
 };

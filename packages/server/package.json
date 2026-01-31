@@ -9,18 +9,21 @@
 		"./jobs": "./src/jobs/types.ts"
 	},
 	"scripts": {
-		"dev": "tsx watch src/index.ts",
+		"dev": "tsx --env-file=.env watch src/index.ts",
 		"build": "tsc",
-		"start": "node dist/index.js"
+		"start": "node --env-file=.env dist/index.js"
 	},
 	"dependencies": {
 		"@hono/node-server": "^1.19.9",
 		"@hono/standard-validator": "^0.2.2",
+		"@libsql/client": "^0.17.0",
+		"drizzle-orm": "^0.45.1",
 		"hono": "^4.11.5",
 		"valibot": "^1.2.0"
 	},
 	"devDependencies": {
 		"@types/node": "^20.11.17",
+		"drizzle-kit": "^0.31.8",
 		"tsx": "^4.7.1"
 	}
 }
