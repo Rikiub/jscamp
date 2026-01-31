@@ -1,15 +1,15 @@
 import { and, eq, exists, inArray, like, or } from "drizzle-orm";
-import { DEFAULTS } from "#/config.js";
-import { db } from "#/db/index.js";
+import { DEFAULTS } from "#/config";
+import { db } from "#/db";
 import type {
 	FullJob,
 	Job,
 	NewJob,
 	Technology,
 	UpdateJob,
-} from "#/db/schemas/jobs.js";
-import * as schema from "#/db/schemas/jobs.js";
-import type { JobsParams } from "./types.js";
+} from "#/db/schemas/jobs";
+import * as schema from "#/db/schemas/jobs";
+import type { JobsParams } from "./types";
 
 export type Transaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
