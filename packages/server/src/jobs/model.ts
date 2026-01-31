@@ -1,11 +1,5 @@
 import { DEFAULTS } from "#/config.js";
-import type {
-	CreateJob,
-	FullJob,
-	Job,
-	JobsParams,
-	PartialJob,
-} from "./types.js";
+import type { NewJob, FullJob, Job, JobsParams, UpdateJob } from "./types.js";
 
 const _data = await import("./jobs.json", { with: { type: "json" } });
 let jobs = _data.default as FullJob[];
@@ -33,24 +27,22 @@ export const JobsModel = {
 					...Object.values(job.tags),
 				];
 
-				return fields.flat().some((val) =>
-					val?.toLowerCase().includes(query)
-				);
+				return fields.flat().some((val) => val?.toLowerCase().includes(query));
 			});
 		}
 		if (technology) {
 			filteredJobs = filteredJobs.filter((job) =>
-				job.tags.technology.includes(technology)
+				job.tags.technology.includes(technology),
 			);
 		}
 		if (location) {
 			filteredJobs = filteredJobs.filter((job) =>
-				job.tags.location.includes(location)
+				job.tags.location.includes(location),
 			);
 		}
 		if (level) {
 			filteredJobs = filteredJobs.filter((job) =>
-				job.tags.level.includes(level)
+				job.tags.level.includes(level),
 			);
 		}
 
@@ -63,13 +55,13 @@ export const JobsModel = {
 		return item;
 	},
 
-	async create(data: CreateJob): Promise<FullJob> {
+	async create(data: NewJob): Promise<FullJob> {
 		const item = { ...data, id: crypto.randomUUID() };
 		jobs.push(item);
 		return item;
 	},
 
-	async update(id: string, data: CreateJob): Promise<FullJob | null> {
+	async update(id: string, data: NewJob): Promise<FullJob | null> {
 		const index = jobs.findIndex((item) => item.id === id);
 
 		if (index !== -1) {
@@ -81,10 +73,7 @@ export const JobsModel = {
 		return null;
 	},
 
-	async partialUpdate(
-		id: string,
-		data: PartialJob,
-	): Promise<FullJob | null> {
+	async partialUpdate(id: string, data: UpdateJob): Promise<FullJob | null> {
 		const index = jobs.findIndex((item) => item.id === id);
 
 		if (index !== -1) {

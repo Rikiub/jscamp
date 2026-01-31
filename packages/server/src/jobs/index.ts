@@ -2,11 +2,7 @@ import { sValidator } from "@hono/standard-validator";
 import { type Context, Hono } from "hono";
 import { DEFAULTS } from "#/config.js";
 import { JobsModel } from "./model.js";
-import {
-	CreateJobSchema,
-	JobsParamsSchema,
-	PartialJobSchema,
-} from "./schemas.js";
+import { NewJobSchema, JobsParamsSchema, UpdateJobSchema } from "./schemas.js";
 import type { JobsResponse } from "./types.js";
 
 const app = new Hono()
@@ -35,13 +31,13 @@ const app = new Hono()
 		return c.json(item);
 	})
 	// create
-	.post("/", sValidator("json", CreateJobSchema), async (c) => {
+	.post("/", sValidator("json", NewJobSchema), async (c) => {
 		const json = c.req.valid("json");
 		const item = await JobsModel.create(json);
 		return c.json(item);
 	})
 	// update
-	.put("/:id", sValidator("json", CreateJobSchema), async (c) => {
+	.put("/:id", sValidator("json", NewJobSchema), async (c) => {
 		const { id } = c.req.param();
 		const json = c.req.valid("json");
 
@@ -51,7 +47,7 @@ const app = new Hono()
 		return c.body(null, 204);
 	})
 	// partial update
-	.patch("/:id", sValidator("json", PartialJobSchema), async (c) => {
+	.patch("/:id", sValidator("json", UpdateJobSchema), async (c) => {
 		const { id } = c.req.param();
 		const json = c.req.valid("json");
 
