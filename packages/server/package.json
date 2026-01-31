@@ -6,7 +6,7 @@
 	},
 	"exports": {
 		"./client": "./src/client.ts",
-		"./jobs": "./src/db/schemas/jobs/types.ts"
+		"./jobs": "./types/jobs.ts"
 	},
 	"scripts": {
 		"dev": "tsx watch --env-file=.env src/index.ts",
