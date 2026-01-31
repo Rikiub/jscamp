@@ -1,5 +1,4 @@
 import { and, eq, exists, inArray, like, or } from "drizzle-orm";
-import { DEFAULTS } from "#/config";
 import { db } from "#/db";
 import * as table from "#/schemas/jobs/tables";
 import type {
@@ -13,14 +12,17 @@ import type { JobsParams } from "./validation";
 
 export type Transaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
+export const LIMIT_PAGINATION = 10;
+export const LIMIT_OFFSET = 0;
+
 export const JobsModel = {
 	async getAll({
 		search,
 		technology,
 		location,
 		level,
-		limit = DEFAULTS.LIMIT_PAGINATION,
-		offset = DEFAULTS.LIMIT_OFFSET,
+		limit = LIMIT_PAGINATION,
+		offset = LIMIT_OFFSET,
 	}: JobsParams = {}): Promise<Job[]> {
 		const filters = [];
 

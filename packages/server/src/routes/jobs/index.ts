@@ -1,8 +1,7 @@
 import { sValidator } from "@hono/standard-validator";
 import { type Context, Hono } from "hono";
-import { DEFAULTS } from "#/config";
 import { NewJobSchema, UpdateJobSchema } from "#/schemas/jobs/validation";
-import { JobsModel } from "./model";
+import { JobsModel, LIMIT_OFFSET, LIMIT_PAGINATION } from "./model";
 import { JobsParamSchema, type JobsResponse } from "./validation";
 
 const app = new Hono()
@@ -15,8 +14,8 @@ const app = new Hono()
 		const data: JobsResponse = {
 			total: jobs.length,
 			results: jobs.length,
-			offset: offset || DEFAULTS.LIMIT_OFFSET,
-			limit: limit || DEFAULTS.LIMIT_PAGINATION,
+			offset: offset || LIMIT_OFFSET,
+			limit: limit || LIMIT_PAGINATION,
 			data: jobs,
 		};
 
