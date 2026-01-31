@@ -3,7 +3,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { DEFAULTS } from "./config";
-import JobsRouter from "./jobs";
+import JobsRouter from "./routes/jobs";
 
 const app = new Hono()
 	.use(cors({ origin: DEFAULTS.ALLOWED_ORIGINS }), logger())

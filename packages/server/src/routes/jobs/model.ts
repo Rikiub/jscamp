@@ -1,15 +1,15 @@
 import { and, eq, exists, inArray, like, or } from "drizzle-orm";
 import { DEFAULTS } from "#/config";
 import { db } from "#/db";
+import * as table from "#/schemas/jobs/tables";
 import type {
 	FullJob,
 	Job,
 	NewJob,
 	Technology,
 	UpdateJob,
-} from "#/db/schemas/jobs";
-import * as schema from "#/db/schemas/jobs";
-import type { JobsParams } from "./types";
+} from "#/schemas/jobs/types";
+import type { JobsParams } from "./validation";
 
 export type Transaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
@@ -29,16 +29,16 @@ export const JobsModel = {
 
 			filters.push(
 				or(
-					like(schema.jobs.title, query),
-					like(schema.jobs.company, query),
+					like(table.jobs.title, query),
+					like(table.jobs.company, query),
 					exists(
 						db
 							.select()
-							.from(schema.contents)
+							.from(table.contents)
 							.where(
 								and(
-									eq(schema.contents.jobId, schema.jobs.id),
-									like(schema.contents.description, query),
+									eq(table.contents.jobId, table.jobs.id),
+									like(table.contents.description, query),
 								),
 							),
 					),
@@ -46,23 +46,23 @@ export const JobsModel = {
 			);
 		}
 
-		if (location) filters.push(eq(schema.jobs.location, location));
-		if (level) filters.push(eq(schema.jobs.level, level));
+		if (location) filters.push(eq(table.jobs.location, location));
+		if (level) filters.push(eq(table.jobs.level, level));
 
 		if (technology) {
 			filters.push(
 				exists(
 					db
 						.select()
-						.from(schema.jobTechnologies)
+						.from(table.jobTechnologies)
 						.innerJoin(
-							schema.technologies,
-							eq(schema.jobTechnologies.techId, schema.technologies.id),
+							table.technologies,
+							eq(table.jobTechnologies.techId, table.technologies.id),
 						)
 						.where(
 							and(
-								eq(schema.jobTechnologies.jobId, schema.jobs.id),
-								eq(schema.technologies.name, technology),
+								eq(table.jobTechnologies.jobId, table.jobs.id),
+								eq(table.technologies.name, technology),
 							),
 						),
 				),
@@ -78,10 +78,8 @@ export const JobsModel = {
 		return results;
 	},
 
-	async getById(jobId: string, tx?: Transaction): Promise<FullJob | null> {
-		const handler = tx ?? db;
-
-		const item = await handler.query.jobs.findFirst({
+	async getById(jobId: string): Promise<FullJob | null> {
+		const item = await db.query.jobs.findFirst({
 			where: (table, { eq }) => eq(table.id, jobId),
 			with: { content: true, technologies: true },
 		});
@@ -95,15 +93,13 @@ export const JobsModel = {
 
 		const result = await db.transaction(async (tx) => {
 			const [jobItem] = await tx
-				.insert(schema.jobs)
+				.insert(table.jobs)
 				.values(job)
-				.returning({ id: schema.jobs.id });
-			await tx
-				.insert(schema.contents)
-				.values({ ...content, jobId: jobItem.id });
+				.returning({ id: table.jobs.id });
+			await tx.insert(table.contents).values({ ...content, jobId: jobItem.id });
 
 			await JobsModel.syncJobTechnologies(tx, jobItem.id, technologies);
-			return JobsModel.getById(jobItem.id, tx);
+			return await JobsModel.getById(jobItem.id);
 		});
 		return result as FullJob;
 	},
@@ -112,16 +108,13 @@ export const JobsModel = {
 		const { technologies, content, ...jobsData } = data;
 
 		return await db.transaction(async (tx) => {
-			await tx
-				.update(schema.jobs)
-				.set(jobsData)
-				.where(eq(schema.jobs.id, jobId));
+			await tx.update(table.jobs).set(jobsData).where(eq(table.jobs.id, jobId));
 
 			if (content) {
 				await tx
-					.update(schema.contents)
+					.update(table.contents)
 					.set(content)
-					.where(eq(schema.contents.jobId, jobId));
+					.where(eq(table.contents.jobId, jobId));
 			}
 
 			await JobsModel.syncJobTechnologies(tx, jobId, technologies);
@@ -129,11 +122,11 @@ export const JobsModel = {
 	},
 
 	async delete(jobId: string) {
-		db.delete(schema.jobs).where(eq(schema.jobs.id, jobId));
+		db.delete(table.jobs).where(eq(table.jobs.id, jobId));
 	},
 
 	async getTags(): Promise<Technology[]> {
-		return await db.select().from(schema.technologies);
+		return await db.select().from(table.technologies);
 	},
 
 	async syncJobTechnologies(
@@ -142,15 +135,15 @@ export const JobsModel = {
 		technologies: string[] = [],
 	) {
 		await tx
-			.delete(schema.jobTechnologies)
-			.where(eq(schema.jobTechnologies.jobId, jobId));
+			.delete(table.jobTechnologies)
+			.where(eq(table.jobTechnologies.jobId, jobId));
 
 		const techIds = await tx
-			.select({ id: schema.technologies.id })
-			.from(schema.technologies)
-			.where(inArray(schema.technologies.name, technologies));
+			.select({ id: table.technologies.id })
+			.from(table.technologies)
+			.where(inArray(table.technologies.name, technologies));
 
-		await tx.insert(schema.jobTechnologies).values(
+		await tx.insert(table.jobTechnologies).values(
 			techIds.map((t) => ({
 				jobId,
 				techId: t.id,

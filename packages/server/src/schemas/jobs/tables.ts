@@ -5,7 +5,6 @@ const jobId = text()
 	.primaryKey()
 	.references(() => jobs.id, { onDelete: "cascade" });
 
-// SCHEMAS
 export const jobs = sqliteTable("jobs", {
 	id: text()
 		.primaryKey()
@@ -44,17 +43,3 @@ export const jobsRelations = relations(jobs, ({ one, many }) => ({
 	}),
 	technologies: many(technologies),
 }));
-
-// TYPES
-export type Technology = typeof technologies.$inferSelect;
-export type Content = typeof contents.$inferSelect;
-export type Job = typeof jobs.$inferSelect & { technologies: Technology[] };
-
-export type FullJob = Job & {
-	content: Content;
-};
-export type NewJob = typeof jobs.$inferInsert & {
-	technologies: string[];
-	content: Omit<typeof contents.$inferInsert, "jobId">;
-};
-export type UpdateJob = Partial<NewJob>;

@@ -1,13 +1,13 @@
 import { sValidator } from "@hono/standard-validator";
 import { type Context, Hono } from "hono";
 import { DEFAULTS } from "#/config";
+import { NewJobSchema, UpdateJobSchema } from "#/schemas/jobs/validation";
 import { JobsModel } from "./model";
-import { JobsParamsSchema, NewJobSchema, UpdateJobSchema } from "./schemas";
-import type { JobsResponse } from "./types";
+import { JobsParamSchema, type JobsResponse } from "./validation";
 
 const app = new Hono()
 	// getAll
-	.get("/", sValidator("query", JobsParamsSchema), async (c) => {
+	.get("/", sValidator("query", JobsParamSchema), async (c) => {
 		const query = c.req.valid("query") ?? {};
 		const { limit, offset } = query;
 		const jobs = await JobsModel.getAll(query);
@@ -37,31 +37,17 @@ const app = new Hono()
 		return c.json(item);
 	})
 	// update
-	.put("/:id", sValidator("json", NewJobSchema), async (c) => {
+	.put("/:id", sValidator("json", UpdateJobSchema), async (c) => {
 		const { id } = c.req.param();
 		const json = c.req.valid("json");
 
-		const item = await JobsModel.update(id, json);
-
-		if (!item) return sendNotFound(c);
-		return c.body(null, 204);
-	})
-	// partial update
-	.patch("/:id", sValidator("json", UpdateJobSchema), async (c) => {
-		const { id } = c.req.param();
-		const json = c.req.valid("json");
-
-		const item = await JobsModel.update(id, json);
-
-		if (!item) return sendNotFound(c);
+		await JobsModel.update(id, json);
 		return c.body(null, 204);
 	})
 	// delete
 	.delete("/:id", async (c) => {
 		const { id } = c.req.param();
-		const item = await JobsModel.delete(id);
-
-		if (!item) return sendNotFound(c);
+		await JobsModel.delete(id);
 		return c.body(null, 204);
 	});
 
