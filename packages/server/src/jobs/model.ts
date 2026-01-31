@@ -1,5 +1,5 @@
-import { DEFAULTS } from "#/config.js";
-import type { NewJob, FullJob, Job, JobsParams, UpdateJob } from "./types.js";
+import { DEFAULTS } from "#/config";
+import type { FullJob, Job, JobsParams, NewJob, UpdateJob } from "./types";
 
 const _data = await import("./jobs.json", { with: { type: "json" } });
 let jobs = _data.default as FullJob[];
