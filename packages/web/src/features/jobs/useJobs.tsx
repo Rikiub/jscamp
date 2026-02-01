@@ -1,5 +1,5 @@
-import { getClient } from "@project/server/client";
-import type { FullJob, JobsParams, JobsResponse } from "@project/server/jobs";
+import type { FullJob, JobsParams, JobsResponse } from "@project/api";
+import { getClient } from "@project/api";
 import { useEffect, useState } from "react";
 
 export function useJobsAll(filters: JobsParams = {}) {

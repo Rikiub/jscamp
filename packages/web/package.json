@@ -1,5 +1,5 @@
 {
-	"name": "@project/client",
+	"name": "@project/web",
 	"private": true,
 	"version": "0.0.0",
 	"type": "module",
@@ -9,7 +9,7 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
-		"@project/server": "workspace:*",
+		"@project/api": "workspace:*",
 		"lucide-react": "^0.548.0",
 		"react": "^19.1.1",
 		"react-dom": "^19.1.1",

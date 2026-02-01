@@ -1,4 +1,4 @@
-import type { JobsParams } from "@project/server/jobs";
+import type { JobsParams } from "@project/api";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
 import { Button } from "@/components/ui/Button";

@@ -1,4 +1,4 @@
-import type { Job } from "@project/server/jobs";
+import type { Job } from "@project/api";
 import { Button } from "@/components/ui/Button";
 import { FavoriteIcon } from "@/components/ui/FavoriteIcon";
 import { Link } from "@/components/ui/Link";

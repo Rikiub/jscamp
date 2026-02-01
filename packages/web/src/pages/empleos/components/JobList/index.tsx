@@ -1,4 +1,4 @@
-import type { Job } from "@project/server/jobs";
+import type { Job } from "@project/api";
 import { Spinner } from "@/components/ui/Spinner";
 import { JobCard } from "@/pages/empleos/components/JobCard";
 import styles from "./styles.module.css";
