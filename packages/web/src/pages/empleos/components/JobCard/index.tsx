@@ -43,8 +43,8 @@ export function JobCard({ job }: { job: Job }) {
 			<p>{job.description}</p>
 
 			<footer className={styles.tags}>
-				{job.tags.technology.map((tag) => (
-					<span key={tag}>{tag}</span>
+				{job.technologies.map((item) => (
+					<span key={item.id}>{item.name}</span>
 				))}
 			</footer>
 		</article>
