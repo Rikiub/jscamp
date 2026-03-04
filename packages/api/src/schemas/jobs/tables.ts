@@ -1,11 +1,13 @@
 import { relations } from "drizzle-orm";
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import {
+	integer,
+	primaryKey,
+	sqliteTable,
+	text,
+} from "drizzle-orm/sqlite-core";
 
-const jobId = text()
-	.primaryKey()
-	.references(() => jobs.id, { onDelete: "cascade" });
-
-export const jobs = sqliteTable("jobs", {
+// Tables
+export const job = sqliteTable("job", {
 	id: text()
 		.primaryKey()
 		.$defaultFn(() => crypto.randomUUID()),
@@ -16,30 +18,51 @@ export const jobs = sqliteTable("jobs", {
 	level: text().notNull(),
 });
 
-export const contents = sqliteTable("job_contents", {
-	jobId: jobId,
+export const jobContent = sqliteTable("job_content", {
+	jobId: text()
+		.primaryKey()
+		.references(() => job.id, { onDelete: "cascade" }),
 	description: text().notNull(),
 	responsibilities: text().notNull(),
 	requirements: text().notNull(),
 	about: text().notNull(),
 });
 
-export const technologies = sqliteTable("technologies", {
+export const technology = sqliteTable("technology", {
 	id: integer().primaryKey({ autoIncrement: true }),
 	name: text().notNull(),
 });
 
-export const jobTechnologies = sqliteTable("job_technology", {
-	jobId: jobId,
-	techId: integer()
-		.notNull()
-		.references(() => technologies.id, { onDelete: "cascade" }),
-});
+// Junk
+export const jobTechnology = sqliteTable(
+	"job_technology",
+	{
+		jobId: text()
+			.notNull()
+			.references(() => job.id, { onDelete: "cascade" }),
+		technologyId: integer()
+			.notNull()
+			.references(() => technology.id, { onDelete: "cascade" }),
+	},
+	(table) => [primaryKey({ columns: [table.jobId, table.technologyId] })],
+);
 
-export const jobsRelations = relations(jobs, ({ one, many }) => ({
-	content: one(contents, {
-		fields: [jobs.id],
-		references: [contents.jobId],
+// Relations
+export const jobTechnologyRelations = relations(jobTechnology, ({ one }) => ({
+	job: one(job, {
+		fields: [jobTechnology.jobId],
+		references: [job.id],
 	}),
-	technologies: many(technologies),
+	technology: one(technology, {
+		fields: [jobTechnology.technologyId],
+		references: [technology.id],
+	}),
+}));
+
+export const jobsRelations = relations(job, ({ one, many }) => ({
+	content: one(jobContent, {
+		fields: [job.id],
+		references: [jobContent.jobId],
+	}),
+	technologies: many(jobTechnology),
 }));

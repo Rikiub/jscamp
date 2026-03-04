@@ -1,7 +1,7 @@
 import * as v from "valibot";
 import { JobSchema } from "#/schemas/jobs/validation";
 
-const queryNumber = v.pipe(v.any(), v.transform(Number), v.number());
+const queryNumber = v.pipe(v.string(), v.transform(Number));
 
 export const JobsParamSchema = v.optional(
 	v.partial(

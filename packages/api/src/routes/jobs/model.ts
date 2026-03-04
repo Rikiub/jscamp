@@ -31,16 +31,16 @@ export const JobsModel = {
 
 			filters.push(
 				or(
-					like(table.jobs.title, query),
-					like(table.jobs.company, query),
+					like(table.job.title, query),
+					like(table.job.company, query),
 					exists(
 						db
 							.select()
-							.from(table.contents)
+							.from(table.jobContent)
 							.where(
 								and(
-									eq(table.contents.jobId, table.jobs.id),
-									like(table.contents.description, query),
+									eq(table.jobContent.jobId, table.job.id),
+									like(table.jobContent.description, query),
 								),
 							),
 					),
@@ -48,46 +48,61 @@ export const JobsModel = {
 			);
 		}
 
-		if (location) filters.push(eq(table.jobs.location, location));
-		if (level) filters.push(eq(table.jobs.level, level));
+		if (location) filters.push(eq(table.job.location, location));
+		if (level) filters.push(eq(table.job.level, level));
 
 		if (technology) {
 			filters.push(
 				exists(
 					db
 						.select()
-						.from(table.jobTechnologies)
+						.from(table.jobTechnology)
 						.innerJoin(
-							table.technologies,
-							eq(table.jobTechnologies.techId, table.technologies.id),
+							table.technology,
+							eq(table.jobTechnology.technologyId, table.technology.id),
 						)
 						.where(
 							and(
-								eq(table.jobTechnologies.jobId, table.jobs.id),
-								eq(table.technologies.name, technology),
+								eq(table.jobTechnology.jobId, table.job.id),
+								eq(table.technology.name, technology),
 							),
 						),
 				),
 			);
 		}
 
-		const results = await db.query.jobs.findMany({
-			where: and(...filters),
-			limit,
-			offset,
-			with: { content: true, technologies: true },
-		});
+		const results = (
+			await db.query.job.findMany({
+				limit,
+				offset,
+				with: {
+					content: true,
+					technologies: { with: { technology: true } },
+				},
+			})
+		).map((job) => ({
+			...job,
+			technologies: job.technologies.map((t) => t.technology),
+		}));
+
 		return results;
 	},
 
 	async getById(jobId: string): Promise<FullJob | null> {
-		const item = await db.query.jobs.findFirst({
+		const item = await db.query.job.findFirst({
 			where: (table, { eq }) => eq(table.id, jobId),
-			with: { content: true, technologies: true },
+			with: {
+				content: true,
+				technologies: { with: { technology: true } },
+			},
 		});
 
 		if (!item) return null;
-		return item;
+
+		return {
+			...item,
+			technologies: item.technologies.map((t) => t.technology),
+		};
 	},
 
 	async create(data: NewJob): Promise<FullJob> {
@@ -95,10 +110,12 @@ export const JobsModel = {
 
 		const result = await db.transaction(async (tx) => {
 			const [jobItem] = await tx
-				.insert(table.jobs)
+				.insert(table.job)
 				.values(job)
-				.returning({ id: table.jobs.id });
-			await tx.insert(table.contents).values({ ...content, jobId: jobItem.id });
+				.returning({ id: table.job.id });
+			await tx
+				.insert(table.jobContent)
+				.values({ ...content, jobId: jobItem.id });
 
 			await JobsModel.syncJobTechnologies(tx, jobItem.id, technologies);
 			return await JobsModel.getById(jobItem.id);
@@ -110,13 +127,13 @@ export const JobsModel = {
 		const { technologies, content, ...jobsData } = data;
 
 		return await db.transaction(async (tx) => {
-			await tx.update(table.jobs).set(jobsData).where(eq(table.jobs.id, jobId));
+			await tx.update(table.job).set(jobsData).where(eq(table.job.id, jobId));
 
 			if (content) {
 				await tx
-					.update(table.contents)
+					.update(table.jobContent)
 					.set(content)
-					.where(eq(table.contents.jobId, jobId));
+					.where(eq(table.jobContent.jobId, jobId));
 			}
 
 			await JobsModel.syncJobTechnologies(tx, jobId, technologies);
@@ -124,11 +141,11 @@ export const JobsModel = {
 	},
 
 	async delete(jobId: string) {
-		db.delete(table.jobs).where(eq(table.jobs.id, jobId));
+		db.delete(table.job).where(eq(table.job.id, jobId));
 	},
 
 	async getTags(): Promise<Technology[]> {
-		return await db.select().from(table.technologies);
+		return await db.select().from(table.technology);
 	},
 
 	async syncJobTechnologies(
@@ -137,18 +154,18 @@ export const JobsModel = {
 		technologies: string[] = [],
 	) {
 		await tx
-			.delete(table.jobTechnologies)
-			.where(eq(table.jobTechnologies.jobId, jobId));
+			.delete(table.jobTechnology)
+			.where(eq(table.jobTechnology.jobId, jobId));
 
 		const techIds = await tx
-			.select({ id: table.technologies.id })
-			.from(table.technologies)
-			.where(inArray(table.technologies.name, technologies));
+			.select({ id: table.technology.id })
+			.from(table.technology)
+			.where(inArray(table.technology.name, technologies));
 
-		await tx.insert(table.jobTechnologies).values(
+		await tx.insert(table.jobTechnology).values(
 			techIds.map((t) => ({
 				jobId,
-				techId: t.id,
+				technologyId: t.id,
 			})),
 		);
 	},
