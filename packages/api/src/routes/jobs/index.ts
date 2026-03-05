@@ -33,10 +33,10 @@ const app = new Hono()
 	.post("/", sValidator("json", NewJobSchema), async (c) => {
 		const json = c.req.valid("json");
 		const item = await JobsModel.create(json);
-		return c.json(item);
+		return c.json(item, 201);
 	})
-	// update
-	.put("/:id", sValidator("json", UpdateJobSchema), async (c) => {
+	// partial update
+	.patch("/:id", sValidator("json", UpdateJobSchema), async (c) => {
 		const { id } = c.req.param();
 		const json = c.req.valid("json");
 
@@ -44,7 +44,7 @@ const app = new Hono()
 		if (!item) return c.body(null, 404);
 
 		await JobsModel.update(id, json);
-		return c.body(null, 204);
+		return c.body(null, 200);
 	})
 	// delete
 	.delete("/:id", async (c) => {

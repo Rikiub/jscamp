@@ -139,7 +139,9 @@ export const JobsModel = {
 					.where(eq(table.jobContent.jobId, jobId));
 			}
 
-			await JobsModel.syncJobTechnologies(tx, jobId, technologies);
+			if (technologies) {
+				await JobsModel.syncJobTechnologies(tx, jobId, technologies);
+			}
 		});
 	},
 
