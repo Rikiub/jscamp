@@ -1,6 +1,6 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-valibot";
 import * as v from "valibot";
-import { jobContent, job, technology } from "./tables";
+import { job, jobContent, technology } from "./tables";
 
 export const TechnologySchema = createSelectSchema(technology);
 

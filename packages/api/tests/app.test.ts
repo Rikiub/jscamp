@@ -1,11 +1,11 @@
-import { it, describe } from "node:test";
 import assert from "node:assert";
-import { safeParse } from "valibot";
-import { JobsResponseSchema } from "#/routes/jobs/validation";
-import { app } from "#/app";
-import { FullJobSchema } from "#/schemas/jobs/validation";
-import { db } from "#/db";
+import { describe, it } from "node:test";
 import { sql } from "drizzle-orm";
+import { safeParse } from "valibot";
+import { app } from "#/app";
+import { db } from "#/db";
+import { JobsResponseSchema } from "#/routes/jobs/validation";
+import { FullJobSchema } from "#/schemas/jobs/validation";
 
 describe("/jobs", () => {
 	const ENDPOINT = "/api/jobs";
