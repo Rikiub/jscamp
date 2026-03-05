@@ -98,7 +98,6 @@ export const JobsModel = {
 		});
 
 		if (!item) return null;
-
 		return {
 			...item,
 			technologies: item.technologies.map((t) => t.technology),
@@ -108,7 +107,7 @@ export const JobsModel = {
 	async create(data: NewJob): Promise<FullJob> {
 		const { content, technologies, ...job } = data;
 
-		const result = await db.transaction(async (tx) => {
+		const jobId = await db.transaction(async (tx) => {
 			const [jobItem] = await tx
 				.insert(table.job)
 				.values(job)
@@ -118,9 +117,13 @@ export const JobsModel = {
 				.values({ ...content, jobId: jobItem.id });
 
 			await JobsModel.syncJobTechnologies(tx, jobItem.id, technologies);
-			return await JobsModel.getById(jobItem.id);
+			return jobItem.id;
 		});
-		return result as FullJob;
+
+		const fullJob = await JobsModel.getById(jobId);
+		if (!fullJob) throw new Error("New job created but full job not founded");
+
+		return fullJob;
 	},
 
 	async update(jobId: string, data: UpdateJob) {

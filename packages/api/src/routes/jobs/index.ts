@@ -1,5 +1,5 @@
 import { sValidator } from "@hono/standard-validator";
-import { type Context, Hono } from "hono";
+import { Hono } from "hono";
 import { NewJobSchema, UpdateJobSchema } from "#/schemas/jobs/validation";
 import { JobsModel, LIMIT_OFFSET, LIMIT_PAGINATION } from "./model";
 import { JobsParamSchema, type JobsResponse } from "./validation";
@@ -26,7 +26,7 @@ const app = new Hono()
 		const { id } = c.req.param();
 		const item = await JobsModel.getById(id);
 
-		if (!item) return sendNotFound(c);
+		if (!item) return c.json({ error: "Job not found" }, 404);
 		return c.json(item);
 	})
 	// create
@@ -40,18 +40,21 @@ const app = new Hono()
 		const { id } = c.req.param();
 		const json = c.req.valid("json");
 
+		const item = await JobsModel.getById(id);
+		if (!item) return c.body(null, 404);
+
 		await JobsModel.update(id, json);
 		return c.body(null, 204);
 	})
 	// delete
 	.delete("/:id", async (c) => {
 		const { id } = c.req.param();
+
+		const item = await JobsModel.getById(id);
+		if (!item) return c.body(null, 404);
+
 		await JobsModel.delete(id);
 		return c.body(null, 204);
 	});
 
 export default app;
-
-function sendNotFound(c: Context) {
-	return c.json({ error: "Job not found" }, 404);
-}
