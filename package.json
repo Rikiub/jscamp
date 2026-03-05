@@ -3,7 +3,8 @@
 	"private": true,
 	"scripts": {
 		"dev": "pnpm -r --parallel dev",
-		"format": "pnpm -r exec biome format --write .",
+		"format": "pnpm -r exec biome format .",
+		"format:fix": "pnpm -r exec biome format --write .",
 		"lint": "pnpm -r exec biome check .",
 		"lint:fix": "pnpm -r exec biome check --write ."
 	},
