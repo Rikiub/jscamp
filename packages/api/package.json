@@ -8,15 +8,17 @@
 		".": "./src/index.ts"
 	},
 	"scripts": {
-		"dev": "NODE_ENV=development tsx watch --env-file=.env src/server.ts",
+		"dev": "tsx watch src/server.ts",
 		"build": "tsc",
-		"start": "NODE_ENV=production node --env-file=.env dist/server.js",
-		"test": "tsx --test --env-file=.env"
+		"start": "node dist/server.js",
+		"test": "tsx --test",
+		"test:watch": "tsx --test --watch"
 	},
 	"dependencies": {
 		"@hono/node-server": "^1.19.9",
 		"@hono/standard-validator": "^0.2.2",
 		"@libsql/client": "^0.17.0",
+		"dotenv": "^17.3.1",
 		"drizzle-orm": "^0.45.1",
 		"drizzle-valibot": "^0.4.2",
 		"hono": "^4.11.5",
